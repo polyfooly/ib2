@@ -34,8 +34,16 @@ packages:
 # These entries can reference officially published versions as well as
 # forks / in-progress versions pinned to a git hash. For example:
 #
-# extra-deps:
-# - acme-missiles-0.3
+extra-deps:
+ - reflex-0.6.2.4@sha256:ffafa543f5137a4f71a098c8ecec0dbb9b2ceaf83c1143039095ace4530d0879,9253
+ - constraints-extras-0.3.0.2@sha256:bf6884be65958e9188ae3c9e5547abfd6d201df021bff8a4704c2c4fe1e1ae5b,1784
+ - dependent-map-0.3@sha256:dc745864d5116bbd59ad29100faec74c79e681d35808547023619544c0e9f9b7,1574
+ - dependent-sum-0.6.2.0@sha256:bff37c85b38e768b942f9d81c2465b63a96076f1ba006e35612aa357770807b6,1856
+ - monoidal-containers-0.6@sha256:2a6780afb75a376aacc6233dd73e35804906ad6809b54cf28895d4a3db141b9f,2566
+ - ref-tf-0.4.0.2@sha256:69de3550250e0cd69f45d080359cb314a9487c915024349c75b78732bbee9332,1134
+ - witherable-0.3.1@sha256:ed3d5bc9eb1c08fa9704d9e143cdf622e1bd80b847cd5ede8c07da7bc7981ab9,1313
+ - git: https://github.com/imalsogreg/servant-reflex.git
+   commit: 9310745a99c670ec244ecdcac6577d0f365f6946
 # - git: https://github.com/commercialhaskell/stack.git
 #   commit: e7b331f14bcffb8367cd58fbfc8b40ec7642100a
 #
