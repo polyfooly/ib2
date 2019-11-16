@@ -1,10 +1,21 @@
-# Imageboard with service-oriented event-driven architecture
+## Imageboard with service-oriented event-driven architecture
 
-## Dependencies
-- GHC
-- Cabal
-- eventstore (Haskell EventStore TCP Client)
+### Dependencies
+
+- make
 - EventStore
-- servant
-- reflex
-- servant-reflex
+
+### Build
+
+Enter the build shell:
+
+```shell
+make enter-shell
+```
+
+Build all subpackages with ghc and ghcjs:
+
+```shell
+make ghc-build
+make ghcjs-build
+```
