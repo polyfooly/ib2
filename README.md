@@ -3,19 +3,28 @@
 ### Dependencies
 
 - make
+- binutils
+- hpack
 - EventStore
 
 ### Build
-
-Enter the build shell:
+Enter the reflex-platform shell, this will install nix, compilers and basic dependencies:
 
 ```shell
 make enter-shell
 ```
 
-Build all subpackages with ghc and ghcjs:
+Update cabal database:
 
 ```shell
-make ghc-build
-make ghcjs-build
+cabal new-update
 ```
+
+Configure cabal packages and build everything:
+
+```shell
+make
+```
+
+##### TODO:
+- docker containerization

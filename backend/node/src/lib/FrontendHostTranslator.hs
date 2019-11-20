@@ -1,0 +1,27 @@
+{-# LANGUAGE DataKinds #-}
+{-# LANGUAGE TypeOperators #-}
+{-# LANGUAGE DeriveGeneric #-}
+{-# LANGUAGE RankNTypes #-}
+{-# LANGUAGE OverloadedStrings #-}
+
+module FrontendHostTranslator where
+
+import Servant
+import Servant.Server
+import Servant.Client
+
+import Network.HTTP.Client (newManager, defaultManagerSettings, Manager)
+import Network.HTTP.ReverseProxy (WaiProxyResponse(..), defaultOnExc, waiProxyTo, ProxyDest(..))
+
+import Network.Wai.Internal (Request)
+
+type FrontendHostAPI = Raw
+frontendHostAPI :: Proxy FrontendHostAPI
+frontendHostAPI = Proxy
+
+translateRequest :: Int -> Request -> IO WaiProxyResponse
+translateRequest port _ = pure . WPRProxyDest . ProxyDest "127.0.0.1" $ port
+
+frontendHostTranslator :: Int -> Manager -> ServerT Raw m
+frontendHostTranslator port manager =
+  Tagged $ waiProxyTo (translateRequest port) defaultOnExc manager

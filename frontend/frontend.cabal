@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 9a69250dede9202ce3f61f18bb1b36383156656115ff9fc1c16972588f48b2d1
+-- hash: b6d863b5607a09a3bfbc0cb3acd656392e9fd64ab495dd3a0d8614edf3ff617c
 
 name:           frontend
 version:        0.1.0.0
@@ -13,7 +13,7 @@ bug-reports:    https://github.com/polyfooly/ib2/issues
 author:         Kyryl Vlasov
 maintainer:     vlaso.kirill2011@gmail.com
 copyright:      2019 Kyryl Vlasov
-license:        Apache
+license:        Apache-2.0
 license-file:   LICENSE
 build-type:     Simple
 
@@ -22,8 +22,24 @@ source-repository head
   location: https://github.com/polyfooly/ib2
   subdir: frontend
 
-executable webservice
-  main-is: frontend.hs
+library
+  exposed-modules:
+      UI
+  other-modules:
+      Paths_frontend
+  hs-source-dirs:
+      src/lib
+  ghcjs-options: -dedupe
+  cpp-options: -DGHCJS_BROWSER
+  build-depends:
+      aeson
+    , base
+    , reflex-dom
+    , servant-reflex
+  default-language: Haskell2010
+
+executable webapp
+  main-is: Main.hs
   other-modules:
       Paths_frontend
   hs-source-dirs:
@@ -33,7 +49,7 @@ executable webservice
   build-depends:
       aeson
     , base
+    , frontend
     , reflex-dom
-    , servant
     , servant-reflex
   default-language: Haskell2010

@@ -1,6 +1,6 @@
-name:                frontend
+name:                frontendhost
 version:             0.1.0.0
-github:              "polyfooly/ib2/frontend"
+github:              "polyfooly/ib2/backend/frontendhost"
 license:             Apache-2.0
 license-file:        LICENSE
 author:              "Kyryl Vlasov"
@@ -8,20 +8,23 @@ maintainer:          "vlaso.kirill2011@gmail.com"
 copyright:           "2019 Kyryl Vlasov"
 
 #ghc-options: -Werror -Wall -Wcompat -Wincomplete-uni-patterns -Widentities  -Wno-simplifiable-class-constraints
-ghcjs-options: -dedupe
-cpp-options: -DGHCJS_BROWSER
+#ghcjs-options: -dedupe
+#cpp-options: -DGHCJS_BROWSER
 
 dependencies:
 - base
-- servant-reflex
-- reflex-dom
+- servant-server
+- servant
 - aeson
+- wai
+- warp
+- common
 
 library:
   source-dirs: src/lib
 
 executables:
-  webapp:
+  frontendhost-service:
     main:                Main.hs
     source-dirs:         src
     #ghc-options:
@@ -29,4 +32,4 @@ executables:
     #- -rtsopts
     #- -with-rtsopts=-N
     dependencies:
-    - frontend
+    - frontendhost

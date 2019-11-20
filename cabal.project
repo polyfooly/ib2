@@ -1,2 +1,4 @@
 packages:
-  frontend/
+  common/
+  backend/node/
+  backend/frontendhost/
