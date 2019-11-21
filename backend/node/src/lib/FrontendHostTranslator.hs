@@ -7,10 +7,10 @@
 module FrontendHostTranslator where
 
 import Servant
-import Servant.Server
-import Servant.Client
+--import Servant.Server
+--import Servant.Client
 
-import Network.HTTP.Client (newManager, defaultManagerSettings, Manager)
+import Network.HTTP.Client (Manager)
 import Network.HTTP.ReverseProxy (WaiProxyResponse(..), defaultOnExc, waiProxyTo, ProxyDest(..))
 
 import Network.Wai.Internal (Request)
@@ -18,10 +18,9 @@ import Network.Wai.Internal (Request)
 import FrontendHost.API
 
 
-
 translateRequest :: Int -> Request -> IO WaiProxyResponse
 translateRequest port _ = pure . WPRProxyDest . ProxyDest "127.0.0.1" $ port
 
-frontendHostTranslator :: Int -> Manager -> ServerT Raw m
+frontendHostTranslator :: Int -> Manager -> ServerT FrontendHostAPI m
 frontendHostTranslator port manager =
   Tagged $ waiProxyTo (translateRequest port) defaultOnExc manager

@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: b6d863b5607a09a3bfbc0cb3acd656392e9fd64ab495dd3a0d8614edf3ff617c
+-- hash: 8a392d7aedad80966d06661c330a669eae41c6cc58e1fb67e0d74cf1fb1dc898
 
 name:           frontend
 version:        0.1.0.0
@@ -29,6 +29,7 @@ library
       Paths_frontend
   hs-source-dirs:
       src/lib
+  ghc-options: -Werror -Wall -Wcompat -Wincomplete-uni-patterns -Widentities  -Wno-simplifiable-class-constraints
   ghcjs-options: -dedupe
   cpp-options: -DGHCJS_BROWSER
   build-depends:
@@ -44,6 +45,7 @@ executable webapp
       Paths_frontend
   hs-source-dirs:
       src
+  ghc-options: -Werror -Wall -Wcompat -Wincomplete-uni-patterns -Widentities  -Wno-simplifiable-class-constraints -threaded -rtsopts -with-rtsopts=-N
   ghcjs-options: -dedupe
   cpp-options: -DGHCJS_BROWSER
   build-depends:

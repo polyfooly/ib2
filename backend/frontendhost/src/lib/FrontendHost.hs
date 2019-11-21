@@ -9,6 +9,7 @@ import Network.Wai.Handler.Warp (run)
 
 import FrontendHost.API
 
+
 server :: String -> Server FrontendHostAPI
 server dir = serveDirectoryFileServer dir
 

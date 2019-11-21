@@ -5,7 +5,7 @@
 module Node where
 
 import Servant
-import Servant.Client
+--import Servant.Client
 import Network.Wai.Handler.Warp (run)
 import Network.HTTP.Client (Manager, newManager, defaultManagerSettings)
 
@@ -21,6 +21,7 @@ type NodeAPI =
 nodeAPI :: Proxy NodeAPI
 nodeAPI = Proxy
 
+handlers :: Int -> Manager -> Server NodeAPI
 handlers port manager =
        return 547455
   :<|> frontendHostTranslator port manager

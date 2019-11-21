@@ -7,7 +7,7 @@ author:              "Kyryl Vlasov"
 maintainer:          "vlaso.kirill2011@gmail.com"
 copyright:           "2019 Kyryl Vlasov"
 
-#ghc-options: -Werror -Wall -Wcompat -Wincomplete-uni-patterns -Widentities  -Wno-simplifiable-class-constraints
+ghc-options: -Werror -Wall -Wcompat -Wincomplete-uni-patterns -Widentities  -Wno-simplifiable-class-constraints
 ghcjs-options: -dedupe
 cpp-options: -DGHCJS_BROWSER
 
