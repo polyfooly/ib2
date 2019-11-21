@@ -15,9 +15,9 @@ import Network.HTTP.ReverseProxy (WaiProxyResponse(..), defaultOnExc, waiProxyTo
 
 import Network.Wai.Internal (Request)
 
-type FrontendHostAPI = Raw
-frontendHostAPI :: Proxy FrontendHostAPI
-frontendHostAPI = Proxy
+import FrontendHost.API
+
+
 
 translateRequest :: Int -> Request -> IO WaiProxyResponse
 translateRequest port _ = pure . WPRProxyDest . ProxyDest "127.0.0.1" $ port

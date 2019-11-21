@@ -7,9 +7,7 @@ module FrontendHost where
 import Servant
 import Network.Wai.Handler.Warp (run)
 
-type FrontendHostAPI = Raw
-frontendHostAPI :: Proxy FrontendHostAPI
-frontendHostAPI = Proxy
+import FrontendHost.API
 
 server :: String -> Server FrontendHostAPI
 server dir = serveDirectoryFileServer dir

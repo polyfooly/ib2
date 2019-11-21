@@ -2,28 +2,23 @@
 
 ### Dependencies
 
+- nix
 - make
-- binutils
-- hpack
+- binutils (?)
 - EventStore
 
 ### Build
-Enter the reflex-platform shell, this will install nix, compilers and basic dependencies:
+Enter nix shell (all dependencies will be installed) and build project
 
+Native:
 ```shell
 make enter-shell
+make build
 ```
-
-Update cabal database:
-
+GHCJS:
 ```shell
-cabal new-update
-```
-
-Configure cabal packages and build everything:
-
-```shell
-make
+make enter-shell-js
+make build-js
 ```
 
 ##### TODO:

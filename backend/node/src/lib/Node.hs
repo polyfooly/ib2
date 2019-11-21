@@ -10,14 +10,23 @@ import Network.Wai.Handler.Warp (run)
 import Network.HTTP.Client (Manager, newManager, defaultManagerSettings)
 
 import FrontendHostTranslator
+import FrontendHost.API
 
-type NodeAPI = FrontendHostAPI
+
+
+type NodeAPI =
+       "test" :> Get '[JSON] Int
+  :<|> FrontendHostAPI
 
 nodeAPI :: Proxy NodeAPI
 nodeAPI = Proxy
 
+handlers port manager =
+       return 547455
+  :<|> frontendHostTranslator port manager
+
 app :: Int -> Manager -> Application
-app port manager = serve nodeAPI $ (frontendHostTranslator port manager)
+app port manager = serve nodeAPI $ handlers port manager
 
 data NodeConfig = NodeConfig {
   nodePort :: Int,

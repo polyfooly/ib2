@@ -20,10 +20,12 @@ dependencies:
 - aeson
 - wai
 - warp
-- common
 - http-client
 - http-reverse-proxy
 - http-types
+
+- common
+- frontendhost
 
 library:
   source-dirs: src/lib

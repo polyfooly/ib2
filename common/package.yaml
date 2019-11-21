@@ -14,7 +14,7 @@ cpp-options: -DGHCJS_BROWSER
 dependencies:
 - base
 - servant
-- servant-reflex
+#- servant-reflex
 - aeson
 
 library:
