@@ -2,7 +2,7 @@ language: nix
 script:
   - nix-env -iA cachix -f https://cachix.org/api/v1/install
   - cachix use polyfooly
-  - nix-env -iA haskellPackages.hpack
+  - nix-env -f '<nixpkgs>' -iA haskellPackages.hpack
   - make configure
   - nix-shell -A shells.ghc --run "cabal new-build all -j1"
   - nix-shell -A shells.ghcjs --run "cabal new-build --project-file=cabal-ghcjs.project --builddir=dist-js all -j1"
