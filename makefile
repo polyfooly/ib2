@@ -11,10 +11,10 @@ enter-shell-js:
 #	reflex-platform/try-reflex
 
 configure:
-	hpack frontend
-	hpack common
-	hpack backend/node
-	hpack backend/frontendhost
+	hpack frontend --force
+	hpack common --force
+	hpack backend/node --force
+	hpack backend/frontendhost --force
 
 #CABAL_BUILD_OPTIONS=--allow-newer --allow-older -j
 CABAL_BUILD_OPTIONS=
