@@ -5,6 +5,7 @@
     common = ./common;
     node = ./backend/node;
     frontendhost = ./backend/frontendhost;
+    posts = ./backend/posts;
   };
 
   overrides = self: super: rec {
@@ -25,6 +26,7 @@
     conduit = pkgs.haskell.lib.dontCheck super.conduit;
     brittany = pkgs.haskell.lib.dontCheck super.brittany;
     reflex-dom-core = pkgs.haskell.lib.dontCheck super.reflex-dom-core;
+    eventstore = pkgs.haskell.lib.dontCheck super.eventstore;
 
     # TODO: maybe optional dontHaddock for jsaddle, servant (due to too long first build)
     backend = pkgs.haskell.lib.dontHaddock super.backend;
@@ -33,7 +35,7 @@
   };
 
   shells = {
-    ghc = ["common" "node" "frontendhost" ];
+    ghc = ["common" "node" "frontendhost" "posts" ];
     ghcjs = ["common" "frontend"];
   };
 

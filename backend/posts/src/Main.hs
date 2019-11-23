@@ -3,7 +3,7 @@
 
 {-# LANGUAGE OverloadedStrings #-}
 
-module Common.API where
+module Main where
 
-someFunc :: IO ()
-someFunc = putStrLn "is there anybody oUt there?"
+main :: IO ()
+main = putStrLn "is there anybody out there?"

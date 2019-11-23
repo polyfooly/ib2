@@ -8,14 +8,11 @@
 module Node where
 
 import Servant
---import Servant.Client
 import Network.Wai.Handler.Warp (run)
 import Network.HTTP.Client (Manager, newManager, defaultManagerSettings)
 
-import FrontendHostTranslator
+import Translators
 import FrontendHost.API
-
-
 
 type NodeAPI =
        "test" :> Get '[JSON] Int
