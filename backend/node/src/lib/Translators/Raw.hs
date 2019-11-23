@@ -1,10 +1,13 @@
+-- Copyright 2019 Kyryl Vlasov
+-- SPDX-License-Identifier: Apache-2.0
+
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE TypeOperators #-}
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE RankNTypes #-}
 {-# LANGUAGE OverloadedStrings #-}
 
-module FrontendHostTranslator where
+module Translators.Raw (rawTranslator) where
 
 import Servant
 --import Servant.Server
@@ -15,12 +18,10 @@ import Network.HTTP.ReverseProxy (WaiProxyResponse(..), defaultOnExc, waiProxyTo
 
 import Network.Wai.Internal (Request)
 
-import FrontendHost.API
-
 
 translateRequest :: Int -> Request -> IO WaiProxyResponse
 translateRequest port _ = pure . WPRProxyDest . ProxyDest "127.0.0.1" $ port
 
-frontendHostTranslator :: Int -> Manager -> ServerT FrontendHostAPI m
-frontendHostTranslator port manager =
+rawTranslator :: Int -> Manager -> ServerT Raw m
+rawTranslator port manager =
   Tagged $ waiProxyTo (translateRequest port) defaultOnExc manager

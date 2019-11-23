@@ -1,0 +1,38 @@
+name:                posts
+version:             0.1.0.0
+github:              "polyfooly/ib2/backend/posts"
+license:             Apache-2.0
+license-file:        LICENSE
+author:              "Kyryl Vlasov"
+maintainer:          "vlaso.kirill2011@gmail.com"
+copyright:           "2019 Kyryl Vlasov"
+
+ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Widentities  -Wno-simplifiable-class-constraints
+#ghcjs-options: -dedupe
+#cpp-options: -DGHCJS_BROWSER
+
+dependencies:
+- base
+- servant-server
+- servant-client
+- eventstore
+- aeson
+- wai
+- warp
+
+- common
+
+
+library:
+  source-dirs: src/lib
+
+executables:
+  posts-service:
+    main:                Main.hs
+    source-dirs:         src
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - posts

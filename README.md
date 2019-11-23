@@ -1,18 +1,23 @@
 ## Imageboard with service-oriented event-driven architecture
 
-### Dependencies
+### Dependencies:
 
+#### External
 - nix
 - make
-- binutils (?)
+- binutils
 - EventStore
 
 ### Build
-Enter nix shell (all dependencies will be installed) and build project
+You may want to use cachix repo with binary cache:
+```shell
+cachix use polyfooly
+```
 
-Native:
+Native part:
 ```shell
 make enter-shell
+make configure
 make build
 ```
 GHCJS:

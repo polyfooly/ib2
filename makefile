@@ -15,9 +15,10 @@ configure:
 	hpack common --force
 	hpack backend/node --force
 	hpack backend/frontendhost --force
+	hpack backend/posts --force
 
 #CABAL_BUILD_OPTIONS=--allow-newer --allow-older -j
-CABAL_BUILD_OPTIONS=
+CABAL_BUILD_OPTIONS=-j
 build:
 	cabal new-build all $(CABAL_BUILD_OPTIONS)
 

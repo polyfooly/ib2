@@ -1,10 +1,11 @@
--- This file has been generated from package.yaml by hpack version 0.28.2.
+cabal-version: 1.12
+
+-- This file has been generated from package.yaml by hpack version 0.33.0.
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: b2facd3c89aa9890f341564987f49872b0a8f1e96783603aedf7b58be9d068ef
+-- hash: ebf211837e66094c2342c3eae6440c89ccd0d4057d38235036e283f5d553d207
 
-cabal-version:  >= 1.10
 name:           frontend
 version:        0.1.0.0
 homepage:       https://github.com/polyfooly/ib2#readme

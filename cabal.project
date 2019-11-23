@@ -2,3 +2,4 @@ packages:
   common/
   backend/node/
   backend/frontendhost/
+  backend/posts/
