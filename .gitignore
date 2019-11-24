@@ -23,3 +23,6 @@ cabal.project.local~
 */*.cabal
 */*/*.cabal
 result
+hie-wrapper.sh
+a
+m

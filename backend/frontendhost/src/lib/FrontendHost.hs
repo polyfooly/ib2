@@ -3,7 +3,7 @@
 
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE TypeOperators #-}
-{-# LANGUAGE DeriveGeneric #-}
+--{-# LANGUAGE DeriveGeneric #-}
 
 module FrontendHost where
 
@@ -14,7 +14,7 @@ import FrontendHost.API
 
 
 server :: String -> Server FrontendHostAPI
-server dir = serveDirectoryFileServer dir
+server = serveDirectoryFileServer
 
 app :: String -> Application
 app dir = serve frontendHostAPI $ server dir
