@@ -5,5 +5,7 @@
 
 module Main where
 
+import Posts (posts)
+
 main :: IO ()
-main = putStrLn "is there anybody out there?"
+main = posts 5474

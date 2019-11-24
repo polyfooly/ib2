@@ -1,17 +1,15 @@
 -- Copyright 2019 Kyryl Vlasov
 -- SPDX-License-Identifier: Apache-2.0
 
+{-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE TypeOperators #-}
-{-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE RankNTypes #-}
 {-# LANGUAGE OverloadedStrings #-}
 
 module Translators.Raw (rawTranslator) where
 
 import Servant
---import Servant.Server
---import Servant.Client
 
 import Network.HTTP.Client (Manager)
 import Network.HTTP.ReverseProxy (WaiProxyResponse(..), defaultOnExc, waiProxyTo, ProxyDest(..))

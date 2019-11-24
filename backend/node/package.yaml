@@ -23,6 +23,8 @@ dependencies:
 - http-client
 - http-reverse-proxy
 - http-types
+- natural-transformation
+- transformers
 
 - common
 - frontendhost

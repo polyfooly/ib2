@@ -3,7 +3,6 @@
 
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE TypeOperators #-}
-{-# LANGUAGE DeriveGeneric #-}
 
 module Node where
 
@@ -11,30 +10,15 @@ import Servant
 import Network.Wai.Handler.Warp (run)
 import Network.HTTP.Client (Manager, newManager, defaultManagerSettings)
 
-import Translators
-import FrontendHost.API
+import Translators (translators)
+import Node.API
 
-type NodeAPI =
-       "test" :> Get '[JSON] Int
-  :<|> FrontendHostAPI
+import Node.Config
 
-nodeAPI :: Proxy NodeAPI
-nodeAPI = Proxy
-
-handlers :: Int -> Manager -> Server NodeAPI
-handlers port manager =
-       return 547455
-  :<|> frontendHostTranslator port manager
-
-app :: Int -> Manager -> Application
-app port manager = serve nodeAPI $ handlers port manager
-
-data NodeConfig = NodeConfig {
-  nodePort :: Int,
-  hostPort :: Int
-}
+app :: NodeConfig -> Manager -> Application
+app config manager = serve nodeAPI $ translators config manager 
 
 node :: NodeConfig -> IO ()
 node config = do
   manager <- newManager defaultManagerSettings
-  run (nodePort config) (app (hostPort config) manager)
+  run (nodePort config) (app config manager)

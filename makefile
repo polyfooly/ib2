@@ -7,9 +7,6 @@ enter-shell:
 enter-shell-js:
 	nix-shell -A shells.ghcjs
 
-#setup-shell:
-#	reflex-platform/try-reflex
-
 configure:
 	hpack frontend --force
 	hpack common --force
