@@ -1,0 +1,5 @@
+Db: eventstore.db
+Log: logs
+
+ExtTcpPort: 5475
+#IntTcpPort: 5476

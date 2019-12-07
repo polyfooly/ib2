@@ -3,10 +3,15 @@
   packages = {
     frontend = ./frontend;
     common = ./common;
+
     node = ./backend/node;
     frontendhost = ./backend/frontendhost;
     posts = ./backend/posts;
+
+    ib2-lib = ./backend/lib;
   };
+
+  withHoogle = false;
 
   overrides = self: super: rec {
     servant-reflex = self.callPackage ./packages/servant-reflex.nix {};
@@ -35,7 +40,7 @@
   };
 
   shells = {
-    ghc = ["common" "node" "frontendhost" "posts" ];
+    ghc = ["common" "node" "frontendhost" "posts" "ib2-lib"];
     ghcjs = ["common" "frontend"];
   };
 

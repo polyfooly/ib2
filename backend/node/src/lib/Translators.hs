@@ -12,23 +12,23 @@ import Servant
 import Servant.Client
 import Network.HTTP.Client (Manager)
 
-import Node.Config
+import Node.Types
 import Node.API
 
 import Translators.Raw (rawTranslator)
 import Translators.Regular (regularTranslator)
 
 
-
-testTranslator1 = regularTranslator testAPI1 --regularTranslator testAPI
-testTranslator2 = regularTranslator testAPI2
+postsTranslator = regularTranslator postsAPI
 frontendHostTranslator = rawTranslator
 
 localUrl :: Int -> BaseUrl
 localUrl port = (BaseUrl Http "127.0.0.1" port "")
 
-translators :: NodeConfig -> Manager -> Server NodeAPI
+localEnv :: Manager -> Int -> ClientEnv
+localEnv manager' port = mkClientEnv manager' (localUrl port)
+
+translators :: NodeConfig -> Manager -> Server TranslatedAPI
 translators config manager' = 
-         testTranslator1 (mkClientEnv manager' (localUrl 5476))
-    :<|> testTranslator2 (mkClientEnv manager' (localUrl 5477))
-    :<|> frontendHostTranslator (frontendHostPort config) manager'
+         (postsTranslator $ localEnv manager' $ postsPort config)
+    :<|> (frontendHostTranslator (frontendHostPort config) manager')

@@ -19,8 +19,12 @@ dependencies:
 - aeson
 - wai
 - warp
+- async
+- stm
+- text
+- lens
 
-- common
+- ib2-lib
 
 
 library:
