@@ -16,9 +16,11 @@ dependencies:
 #- servant
 #- servant-reflex
 - aeson
-
-- posts
+- text
+#- posts
 
 
 library:
-  source-dirs: src/lib
+  source-dirs: src/lib, ../backend/posts/src/lib
+  other-modules: Posts.Types
+  
