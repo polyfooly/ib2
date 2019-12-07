@@ -1,6 +1,6 @@
-name:                common
+name:                ib2-lib
 version:             0.1.0.0
-github:              "polyfooly/ib2/common"
+github:              "polyfooly/ib2/backend/lib"
 license:             Apache-2.0
 license-file:        LICENSE
 author:              "Kyryl Vlasov"
@@ -8,19 +8,18 @@ maintainer:          "vlaso.kirill2011@gmail.com"
 copyright:           "2019 Kyryl Vlasov"
 
 ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Widentities  -Wno-simplifiable-class-constraints
-ghcjs-options: -dedupe
-cpp-options: -DGHCJS_BROWSER
+#ghcjs-options: -dedupe
+#cpp-options: -DGHCJS_BROWSER
 
 dependencies:
 - base
-#- servant
-#- servant-reflex
+- servant
+- servant-server
+- servant-client
+- wai
+- warp
 - aeson
-- text
-#- posts
-
+- eventstore
 
 library:
-  source-dirs: src/lib, ../backend/posts/src/lib
-  other-modules: Posts.Types
-  
+  source-dirs: src

@@ -5,7 +5,7 @@
 
 module Main where
 
-import Posts (posts)
+import qualified Posts
 
 main :: IO ()
-main = posts 5474
+main = Posts.service 5474

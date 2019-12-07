@@ -15,7 +15,7 @@ dependencies:
 - base
 - servant
 - servant-server
-- servant-reflex
+#- servant-reflex
 - servant-client
 - aeson
 - wai
@@ -23,11 +23,13 @@ dependencies:
 - http-client
 - http-reverse-proxy
 - http-types
-- natural-transformation
+#- natural-transformation
 - transformers
 
+- ib2-lib
 - common
 - frontendhost
+- posts
 
 library:
   source-dirs: src/lib

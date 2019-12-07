@@ -4,29 +4,29 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE TypeOperators #-}
 
-module Node.API where
+module Node.API
+    ( module Node.API
+    , module Posts.API
+    ) where
 
 import Servant
+
 import FrontendHost.API
+import Posts.API
+import IB2.Service.Events.Types
 
-type TestAPI1 = 
-       "test1" :> Capture "x" String :> Get '[JSON] Integer
-  :<|> "test2" :> Get '[JSON] String
-testAPI1 :: Proxy TestAPI1
-testAPI1 = Proxy
 
-type TestAPI2 = 
-       "test3" :> Capture "x" Int :> Get '[JSON] String
-  :<|> "test4" :> Get '[JSON] String
-  :<|> "test5" :> Post '[JSON] String
-testAPI2 :: Proxy TestAPI2
-testAPI2 = Proxy
+type NodeServiceAPI =
+         "eventstoreConfig" :> Get '[JSON] EventStoreConfig
 
-type NodeAPI =
-       TestAPI1
-  :<|> TestAPI2
-  :<|> FrontendHostAPI
+type TranslatedAPI =
+         PostsAPI
+    :<|> FrontendHostAPI
+
+translatedAPI :: Proxy TranslatedAPI
+translatedAPI = Proxy
+  
+type NodeAPI = NodeServiceAPI :<|> TranslatedAPI
 
 nodeAPI :: Proxy NodeAPI
 nodeAPI = Proxy
-  

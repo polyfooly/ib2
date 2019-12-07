@@ -3,3 +3,4 @@ packages:
   backend/node/
   backend/frontendhost/
   backend/posts/
+  backend/lib

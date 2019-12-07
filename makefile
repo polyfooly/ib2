@@ -8,11 +8,20 @@ enter-shell-js:
 	nix-shell -A shells.ghcjs
 
 configure:
+	hpack frontend
+	hpack common
+	hpack backend/node
+	hpack backend/frontendhost
+	hpack backend/posts
+	hpack backend/lib
+
+configure-force:
 	hpack frontend --force
 	hpack common --force
 	hpack backend/node --force
 	hpack backend/frontendhost --force
 	hpack backend/posts --force
+	hpack backend/lib --force
 
 #CABAL_BUILD_OPTIONS=--allow-newer --allow-older -j
 CABAL_BUILD_OPTIONS=-j

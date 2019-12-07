@@ -1,3 +1,3 @@
 #!/bin/sh
 
-sudo eventstored --db eventstore.db
+sudo eventstored --config=eventstore.yaml
