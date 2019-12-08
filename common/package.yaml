@@ -23,4 +23,3 @@ dependencies:
 library:
   source-dirs: src/lib, ../backend/posts/src/lib
   other-modules: Posts.Types
-  

@@ -72,7 +72,7 @@ devReducer conn state = do
     let loop :: IO ()
         loop = do
             event <- nextEvent upstreamSubscription
-            handleResolved event state
+            postsHandleResolved event state
             loop
     loop
 
