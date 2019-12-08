@@ -15,7 +15,7 @@ import IB2.Service.Events
 import Posts.Types
 
 
-data TestEvent = TestEvent { t :: Int }
+data TestEvent = TestEvent { testVar :: Int }
     deriving (Generic, ToJSON, FromJSON)
 instance Event' TestEvent where
     eventType = const "testEvent"

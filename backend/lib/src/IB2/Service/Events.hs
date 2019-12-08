@@ -20,3 +20,4 @@ class (ToJSON d, FromJSON d) => Event' d where
 
     parse :: ResolvedEvent -> Maybe d
     parse = resolvedEventDataAsJson
+    
