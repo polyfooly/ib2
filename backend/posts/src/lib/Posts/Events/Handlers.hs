@@ -5,12 +5,14 @@
 {-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE AllowAmbiguousTypes #-}
+{-# LANGUAGE RankNTypes #-}
+{-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE FunctionalDependencies #-}
 
 module Posts.Events.Handlers where
 
 import Control.Concurrent.STM
-import Control.Monad.IO.Class
 
 import Database.EventStore
 
@@ -19,56 +21,69 @@ import Posts.Types
 import IB2.Service.Events
 
 
--- TODO: abstract data representaion
-class Event' e => Handleable e s where 
-    handle :: e -> TVar s -> STM ()
+if' :: Bool -> a -> a -> a 
+if' True e _ = e
+if' False _ e = e
+
+
+class (Monad m) => MStateM m where --Mutable state monad 
+    runS :: m () -> IO ()
+
+class (MStateM m) => MState m v where --Mutable state 
+    modify :: v s -> (s -> s) -> m () 
+
+class Event' e => Handleable e s where --Handleable event for specific service
+    handle :: (MState m v) => e -> v s -> m ()
+
+
+instance MStateM STM where 
+    runS = atomically
+
+instance MState STM TVar where
+    modify = modifyTVar
+
 
 instance Handleable PostPosted PostsState where
-    handle event state = do
-        let newPost = post event
-        modifyTVar state (\st -> st { posts = newPost : posts st })
+    handle event state = 
+        let newPost = post event 
+        in modify state (\st -> st { posts = newPost : posts st })
 
 instance Handleable PostDeleted PostsState where
     handle event state =
-        modifyTVar state (\st -> st
+        modify state (\st -> st
             { posts = filter ((/=) (deletedPostId event) . postId) (posts st) })
 
+--  TODO: Refactor it all...
+type ResolvedHandler m v s = ResolvedEvent -> v s -> m ()
+type HandlerSelector m v s = EventType ->
+     ResolvedHandler m v s -> ResolvedHandler m v s
 
-maybeHandle :: forall e s. (Handleable e s) => 
-    e -> ResolvedEvent -> TVar s -> STM ()
-maybeHandle hint event state = do 
+maybeHandle :: forall e s m v. (Handleable e s, MState m v) => 
+    e -> ResolvedHandler m v s
+maybeHandle _ event state = do 
     let parsed = (parse event) :: Maybe e
     case parsed of
         Nothing -> return ()
         Just e -> handle e state
 
-
-if' :: Bool -> a -> a -> a 
-if' True e _ = e
-if' False _ e = e
-
-selectHandler ::
-      (Handleable h s) => h 
-    -> EventType -> (ResolvedEvent -> TVar s -> STM ())
-    -> ResolvedEvent -> TVar s -> STM ()
-selectHandler hint t alt =
+tryAs :: (Handleable e s, MState m v) =>
+    e -> HandlerSelector m v s
+tryAs hint t alt =
     if' (t == eventType hint) (maybeHandle hint) alt
 
-type HandlerSelector s = EventType
-    -> (ResolvedEvent -> TVar s -> STM ())
-    -> ResolvedEvent -> TVar s -> STM ()
-
-handleResolved :: 
-       HandlerSelector s -> ResolvedEvent -> TVar s -> IO ()
+handleResolved :: (MState m v) =>
+       HandlerSelector m v s
+    -> ResolvedHandler IO v s
 handleResolved selector event state = do
     case fmap (UserDefined . recordedEventType) $ resolvedEventRecord event of
         Nothing -> return ()
-        Just t -> atomically $
+        Just t -> runS $
             (selector t $ const . const $ return ()) event state
-
-postsSelector :: HandlerSelector PostsState    
+            
+postsSelector :: HandlerSelector STM TVar PostsState  
 postsSelector t alt = 
-    selectHandler (undefined :: PostPosted) t $
-    selectHandler (undefined :: PostDeleted) t $ alt
+    tryAs (undefined :: PostPosted) t $
+    tryAs (undefined :: PostDeleted) t $ alt 
 
+postsHandleResolved :: ResolvedEvent -> TVar PostsState -> IO ()
 postsHandleResolved = handleResolved postsSelector
