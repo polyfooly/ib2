@@ -7,7 +7,7 @@
 module Translators.Regular where
 
 import Servant
-import Servant.Server
+--import Servant.Server
 import Servant.Client
 import Control.Monad.Trans.Except
 import Control.Exception (try)

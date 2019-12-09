@@ -19,6 +19,7 @@ dependencies:
 - wai
 - warp
 - common
+- lens
 
 library:
   source-dirs: src/lib

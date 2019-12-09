@@ -7,7 +7,6 @@
 module Posts.API where
 
 import Servant
---import Data.Aeson
 
 import qualified Posts.Types as P
 

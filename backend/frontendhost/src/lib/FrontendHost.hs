@@ -3,7 +3,6 @@
 
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE TypeOperators #-}
---{-# LANGUAGE DeriveGeneric #-}
 
 module FrontendHost where
 

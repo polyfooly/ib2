@@ -6,8 +6,6 @@
 {-# LANGUAGE DeriveGeneric #-}
 --TEMP
 {-# LANGUAGE OverloadedStrings #-}
---{-# LANGUAGE ImpredicativeTypes #-}
---{-# LANGUAGE DeriveAnyClass #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 
 module Posts where
@@ -15,22 +13,19 @@ module Posts where
 import Servant
 import Network.Wai.Handler.Warp (run)
 import Control.Concurrent.STM
-import Control.Concurrent.Async (wait, concurrently_)
+import Control.Concurrent.Async (concurrently_)
 
 import Database.EventStore
 
 import IB2.Service.Reducer
 
 import Posts.API
-import Posts.Events
 import Posts.Events.Handlers
 import Posts.Types as P
 
 --TEMP
-import IB2.Service.Events
 import Control.Monad.IO.Class
 import Control.Lens
-import Servant.Server
 import IB2.Types
 
 

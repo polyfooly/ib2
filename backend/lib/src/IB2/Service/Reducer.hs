@@ -17,7 +17,7 @@ import IB2.Service.Events
 
 maybeHandle :: forall e s m v. (Handleable e s, MState m v) => 
     e -> ResolvedHandler m v s
-maybeHandle _ event state = do 
+maybeHandle _ event state = do --try to handle as specific event
     let parsed = (parse event) :: Maybe e
     case parsed of
         Nothing -> return ()
@@ -29,8 +29,8 @@ if' False _ e = e
         
 tryAs :: (Handleable e s, MState m v) =>
     e -> HandlerSelector m v s
-tryAs hint t alt =
-    if' (t == eventType hint) (maybeHandle hint) alt
+tryAs hint t next = --try to handle as specific event or return next
+    if' (t == eventType hint) (maybeHandle hint) next
 
 handleResolved :: (MState m v) =>
        HandlerSelector m v s
@@ -39,13 +39,14 @@ handleResolved selector event state = do
     case fmap (UserDefined . recordedEventType) $ resolvedEventRecord event of
         Nothing -> return ()
         Just t -> runS $
+            --select one of selector handlers or do nothing
             (selector t $ const . const $ return ()) event state
 
 
 reducer ::
-        Connection -> v s -> StreamName 
-    -> (ResolvedEvent -> v s -> IO ())
-    ->  IO ()
+       Connection -> v s -> StreamName 
+    -> ResolvedHandler IO v s 
+    -> IO ()
 reducer conn state streamName handler = do
     --let evt = create $ PostPosted $ P.Post "text" 0
     --as <- sendEvent conn streamName anyVersion evt $ Nothing
@@ -55,7 +56,7 @@ reducer conn state streamName handler = do
     --    conn streamName True Nothing Nothing Nothing
     upstreamSubscription <- subscribe conn streamName True Nothing
 
-    let loop :: IO ()
+    let loop :: IO () 
         loop = do
             event <- nextEvent upstreamSubscription
             handler event state

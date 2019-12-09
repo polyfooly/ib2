@@ -12,7 +12,6 @@ import Database.EventStore
 
 import Posts.Events
 import Posts.Types
-import IB2.Service.Events
 import IB2.Service.Reducer
 
 
@@ -24,7 +23,7 @@ instance Handleable PostPosted PostsState where
 instance Handleable PostDeleted PostsState where
     handle event state =
         modify state (\st -> st
-            { posts = filter ((/=) (deletedPostId event) . postId) (posts st) })
+            { posts = filter ((/=) (deletedPostId event) . postId) (posts st) }) 
             
 postsSelector :: HandlerSelector STM TVar PostsState  
 postsSelector t alt = 
