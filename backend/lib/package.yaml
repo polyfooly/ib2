@@ -20,6 +20,7 @@ dependencies:
 - warp
 - aeson
 - eventstore
+- stm
 
 library:
   source-dirs: src
