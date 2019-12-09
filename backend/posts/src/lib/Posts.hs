@@ -17,15 +17,16 @@ import Network.Wai.Handler.Warp (run)
 import Control.Concurrent.STM
 import Control.Concurrent.Async (wait, concurrently_)
 
+import Database.EventStore
+
+import IB2.Service.Reducer
+
 import Posts.API
 import Posts.Events
 import Posts.Events.Handlers
 import Posts.Types as P
 
 --TEMP
-import Database.EventStore
---import Data.Aeson
---import GHC.Generics
 import IB2.Service.Events
 import Control.Monad.IO.Class
 import Control.Lens
@@ -56,27 +57,8 @@ server state = hoistServer postsAPI stmToHandler $ serverT state
 app :: TVar PostsState -> Application
 app state = serve postsAPI $ server state
 
---TODO: Refactor - move generic parts to ib2-lib package
-devReducer :: Connection -> TVar PostsState -> IO ()
-devReducer conn state = do
-    let streamName = "posts"
-
-    --let evt = create $ PostPosted $ P.Post "text" 0
-    --as <- sendEvent conn streamName anyVersion evt $ Nothing
-    --wait as >> putStrLn "passed"
-
-    --replaySubscription <- subscribeFrom 
-    --    conn streamName True Nothing Nothing Nothing
-    upstreamSubscription <- subscribe conn streamName True Nothing
-
-    let loop :: IO ()
-        loop = do
-            event <- nextEvent upstreamSubscription
-            postsHandleResolved event state
-            loop
-    loop
-
-    return ()
+postsReducer :: Connection -> TVar PostsState -> IO ()
+postsReducer conn state = reducer conn state "posts" postsHandleResolved
 
 service :: Int -> IO ()
 service port = do
@@ -87,4 +69,4 @@ service port = do
     conn <- connect settings (Static "127.0.0.1" 5475)
     state <- newTVarIO defaultState
 
-    concurrently_ (run port $ app state) (devReducer conn state)
+    concurrently_ (run port $ app state) (postsReducer conn state)

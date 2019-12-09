@@ -24,7 +24,7 @@ configure-force:
 	hpack backend/lib --force
 
 #CABAL_BUILD_OPTIONS=--allow-newer --allow-older -j
-CABAL_BUILD_OPTIONS=-j
+CABAL_BUILD_OPTIONS=-j1
 build:
 	cabal new-build all $(CABAL_BUILD_OPTIONS)
 

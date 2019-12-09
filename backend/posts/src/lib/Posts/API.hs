@@ -28,4 +28,3 @@ type PostsAPI = PostsTestAPI :<|> PostsQAPI  :<|> PostsCAPI
 
 postsAPI :: Proxy PostsAPI
 postsAPI = Proxy
-
