@@ -17,8 +17,9 @@ dependencies:
 - servant
 - aeson
 - wai
+- wai-app-static
 - warp
-- common
+#- common
 - lens
 
 library:

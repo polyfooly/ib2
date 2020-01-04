@@ -6,7 +6,7 @@ import Control.Lens
 
 import FrontendHost (hostFrontend)
 
---frontendDir = "/home/syecpsa/github/ib2/dist-ghcjs/build/x86_64-linux/ghcjs-8.4.0.1/frontend-0.1.0.0/x/webapp/build/webapp/webapp.jsexe"
+--frontendDir = "dist-ghcjs/build/x86_64-linux/ghcjs-8.4.0.1/frontend-0.1.0.0/x/webapp/build/webapp/webapp.jsexe"
 
 main :: IO ()
 main = do
@@ -15,5 +15,7 @@ main = do
         frontendDir = args ^? element 0
 
     case frontendDir of
-        Just dir -> hostFrontend hostPort dir
+        Just dir -> do
+            putStrLn "Webserver started..."
+            hostFrontend hostPort dir
         _ -> putStrLn "err: provide frontend .jsexe dir as first arg"
