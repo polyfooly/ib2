@@ -40,7 +40,10 @@
       "http2"
       "bsb-http-chunked"
     ]) ++
-    (map (x: { name = x; value = pkgs.haskell.lib.dontHaddock super.${x}; })
+    (map (x: { name = x; value = pkgs.haskell.lib.dontHaddock 
+      ( pkgs.haskell.lib.overrideCabal super.${x} (drv:
+        { libraryToolDepends = []; })
+      ); })
     [ "frontend"
       "common"
       "node"
@@ -59,5 +62,6 @@
 
   shellToolOverrides = ghc: super: {
     ccjs = pkgs.closurecompiler;
+    sass = import ./packages/dart-sass.nix {};
   };
 })
