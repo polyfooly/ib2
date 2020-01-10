@@ -19,7 +19,6 @@
       "wai-extra"
       "wai-app-static"
       "silently"
-      "hpack"
       "mockery" 
       "unliftio" 
       "yaml"
@@ -63,5 +62,6 @@
   shellToolOverrides = ghc: super: {
     ccjs = pkgs.closurecompiler;
     sass = import ./packages/dart-sass.nix {};
+    inherit (pkgs.haskellPackages) hpack;
   };
 })
