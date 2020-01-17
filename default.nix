@@ -61,7 +61,11 @@
 
   shellToolOverrides = ghc: super: {
     ccjs = pkgs.closurecompiler;
+
     sass = import ./packages/dart-sass.nix {};
+    
     inherit (pkgs.haskellPackages) hpack;
+    inherit (pkgs) unzip;
+    inherit (pkgs) wget;
   };
 })
