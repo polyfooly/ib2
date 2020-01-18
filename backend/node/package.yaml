@@ -15,7 +15,7 @@ dependencies:
 - base
 - servant
 - servant-server
-#- servant-reflex
+- servant-pagination
 - servant-client
 - aeson
 - wai
@@ -23,7 +23,7 @@ dependencies:
 - http-client
 - http-reverse-proxy
 - http-types
-#- natural-transformation
+- text
 - transformers
 
 - ib2-lib

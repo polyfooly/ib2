@@ -3,6 +3,7 @@
 
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE TypeOperators #-}
+{-# LANGUAGE TypeApplications #-}
 
 module Node.API
     ( module Node.API
@@ -23,10 +24,8 @@ type TranslatedAPI =
          PostsAPI
     :<|> FrontendHostAPI
 
-translatedAPI :: Proxy TranslatedAPI
-translatedAPI = Proxy
+translatedAPI = Proxy @TranslatedAPI
   
 type NodeAPI = NodeServiceAPI :<|> TranslatedAPI
 
-nodeAPI :: Proxy NodeAPI
-nodeAPI = Proxy
+nodeAPI = Proxy @NodeAPI
