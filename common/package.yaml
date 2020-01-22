@@ -13,13 +13,23 @@ cpp-options: -DGHCJS_BROWSER
 
 dependencies:
 - base
-#- servant
-#- servant-reflex
+- time
 - aeson
 - text
-#- posts
+- servant-server
+- servant-pagination
 
 
 library:
-  source-dirs: src/lib, ../backend/posts/src/lib
-  other-modules: Posts.Types
+  source-dirs: 
+    - src/lib
+    - ../backend/posts/src/lib
+    - ../backend/lib/src
+  other-modules:
+    #- IB2.Service.Server
+    - IB2.Service.Server.Types
+    - Posts.Types
+    - Posts.API
+  exposed-modules:
+    - IB2.Common.API
+    - IB2.Common.Types
