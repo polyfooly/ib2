@@ -25,13 +25,11 @@ emptyServer' = return "empty"
 ioToHandler :: IO a -> Handler a
 ioToHandler = Handler . ExceptT . try
 
-cqrsIOServerSt :: 
-    (HasServer api '[], ServerT api IO ~ (c :<|> q))
+cqrsIOServerSt :: (HasServer api '[], ServerT api IO ~ (c :<|> q))
     => Proxy api 
     -> (s -> v -> c) -> (s -> v -> q)
-    -> s -> v 
+    -> s -> v
     -> ServerT api Handler
 cqrsIOServerSt api cs qs conf st =
-    hoistServer api
-        (liftIO :: forall a. IO a -> Handler a)
+    hoistServer api ioToHandler
         (cs conf st :<|> qs conf st)
