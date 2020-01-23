@@ -18,6 +18,8 @@ dependencies:
 - text
 - servant-server
 - servant-pagination
+- hashable
+- hashable-time
 
 
 library:

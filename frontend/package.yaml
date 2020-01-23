@@ -8,14 +8,22 @@ maintainer:          "vlaso.kirill2011@gmail.com"
 copyright:           "2019 Kyryl Vlasov"
 
 ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Widentities  -Wno-simplifiable-class-constraints
-ghcjs-options: -dedupe
+ghcjs-options: -dedupe -fsimpl-tick-factor=200
 cpp-options: -DGHCJS_BROWSER
 
 dependencies:
 - base
 - servant-reflex
+- containers
+- reflex
 - reflex-dom
+- reflex-dom-contrib
 - aeson
+- time
+- text
+
+- common
+
 
 library:
   source-dirs: src/lib

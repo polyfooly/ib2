@@ -1,6 +1,7 @@
 
 .SILENT:
 
+BULMA_VER=0.8.0
 export WEBAPP_OUTPUT=dist-ghcjs/build/x86_64-linux/ghcjs-8.4.0.1/frontend-0.1.0.0/x/webapp/build/webapp/webapp.jsexe
 
 export NIX_BUILD_CORES=1
@@ -15,7 +16,6 @@ configure:
 	for pkg in $(PKGS); do \
 		hpack $$pkg $(HPACK_ARGS); \
 	done
-
 configure-force:
 	make HPACK_ARGS=--force configure
 
@@ -26,12 +26,15 @@ build:
 build-js:
 	cabal new-build --project-file=cabal-ghcjs.project --builddir=dist-ghcjs all $(CABAL_BUILD_OPTIONS)
 
-BULMA=frontend/src/styles/bulma-0.8.0/bulma.sass
+BULMA=frontend/src/styles/bulma
+BULMA_AR=https://github.com/jgthms/bulma/releases/download/$(BULMA_VER)/bulma-$(BULMA_VER).zip
 $(BULMA):
 	cd frontend/src/styles && \
-		wget -O bulma.zip https://github.com/jgthms/bulma/releases/download/0.8.0/bulma-0.8.0.zip && \
-		unzip bulma.zip && \
+		wget --no-verbose -O bulma.zip $(BULMA_AR) && \
+		unzip -q bulma.zip && \
+		mv bulma-$(BULMA_VER) bulma && \
 		rm bulma.zip
+
 $(WEBAPP_OUTPUT):
 	mkdir -p $(WEBAPP_OUTPUT)
 build-css: $(WEBAPP_OUTPUT) $(BULMA)

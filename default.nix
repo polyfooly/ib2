@@ -52,6 +52,7 @@
     ])
   )) // {
     servant-reflex = self.callPackage ./packages/servant-reflex.nix {};
+    reflex-dom-contrib = self.callPackage ./packages/reflex-dom-contrib.nix {};
   };
 
   shells = {

@@ -3,27 +3,43 @@
 
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE TypeOperators #-}
+{-# LANGUAGE TypeApplications #-}
 
 module Posts.API where
 
 import Servant
+import Servant.Pagination
 
+import Posts.Types hiding (Post)
 import qualified Posts.Types as P
 
-import IB2.Types
+import IB2.Service.Server.Types
 
-
-type CResponse = Bool
 
 type PostsTestAPI = "postTest" :> Get '[JSON] String
 
 type PostsQAPI = --Query API
-         "post" :> Capture "id" Int :> Get '[JSON] (Maybe P.Post)
+    "posts" :> (
+        Capture "id" PostID :> Get '[JSON] (Maybe P.Post) :<|>
 
-type PostsCAPI = EmptyAPI' --Control API
-        --"post" :> Capture "post" P.Post :> Post '[JSON] CResponse
+        "ops" :> Capture "tag" PostTag :>
+            Header "Range" (Ranges '["date"] P.Post) :>
+            GetPartialContent '[JSON] (Headers RecentOpsHeaders [P.Post])
+    ) :<|> 
+    "threads" :> (
+        Capture "id" PostID :> Get '[JSON] (Maybe Thread) :<|>
+        Capture "id" PostID :> "replies" :> Get '[JSON] (Maybe [PostID])
+    )
 
-type PostsAPI = PostsTestAPI :<|> PostsQAPI  :<|> PostsCAPI
+type RecentOpsHeaders =
+    Header "Total-Count" Int ': PageHeaders '["date"] P.Post
 
-postsAPI :: Proxy PostsAPI
-postsAPI = Proxy
+type PostsCAPI = --Command API
+    "post" :> ReqBody '[JSON] PostData :> Post '[JSON] (Maybe PostID)
+
+type PostsAPI =
+    "api" :> "v1" :> ( PostsTestAPI 
+                  :<|> PostsCAPI 
+                  :<|> PostsQAPI )
+
+postsAPI = Proxy @PostsAPI
