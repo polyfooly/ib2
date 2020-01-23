@@ -16,11 +16,13 @@ dependencies:
 - servant
 - servant-server
 - servant-client
+- async
 - wai
 - warp
 - aeson
 - eventstore
 - stm
+- transformers
 
 library:
   source-dirs: src

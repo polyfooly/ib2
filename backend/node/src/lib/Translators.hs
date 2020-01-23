@@ -4,9 +4,9 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TypeOperators #-}
 
-module Translators (
-    translators
-) where
+module Translators 
+    ( translators
+    ) where
 
 import Servant
 import Servant.Client
@@ -22,8 +22,10 @@ import Translators.Regular (regularTranslator)
 postsTranslator = regularTranslator postsAPI
 frontendHostTranslator = rawTranslator
 
+
+-- TODO: routing
 localUrl :: Int -> BaseUrl
-localUrl port = (BaseUrl Http "127.0.0.1" port "")
+localUrl port = BaseUrl Http "127.0.0.1" port ""
 
 localEnv :: Manager -> Int -> ClientEnv
 localEnv manager' port = mkClientEnv manager' (localUrl port)

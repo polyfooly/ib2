@@ -6,6 +6,8 @@ module Main where
 import Node
 import Node.Types
 
+import IB2.Service.Events
+
 
 main :: IO ()
 main = node NodeConfig 

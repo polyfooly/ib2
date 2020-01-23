@@ -24,7 +24,6 @@ dependencies:
 - http-reverse-proxy
 - http-types
 - text
-- transformers
 
 - ib2-lib
 - common

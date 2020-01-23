@@ -17,7 +17,7 @@ import Network.HTTP.ReverseProxy
 
 import Network.Wai.Internal (Request)
 
--- TODO: Add way to intervent/monitor/report non-"GET /" requests here
+
 translateRequest :: Int -> Request -> IO WaiProxyResponse
 translateRequest port _ = pure . WPRProxyDest . ProxyDest "127.0.0.1" $ port
 
