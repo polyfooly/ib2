@@ -21,13 +21,14 @@ instance Event' TestEvent where
     eventType = const "testEvent"
 
 data PostPosted = PostPosted
-    { post :: Post
+    { postedPost :: HashedPost
     } deriving (Generic, ToJSON, FromJSON)
 instance Event' PostPosted where 
     eventType = const "postPosted"
 
 data PostDeleted = PostDeleted
-    { deletedPostId :: Int
+    { deletedPostId :: PostID
     } deriving (Generic, ToJSON, FromJSON)
 instance Event' PostDeleted where
     eventType = const "postDeleted"
+    

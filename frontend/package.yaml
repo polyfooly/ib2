@@ -13,7 +13,9 @@ cpp-options: -DGHCJS_BROWSER
 
 dependencies:
 - base
+- servant
 - servant-reflex
+- servant-pagination
 - containers
 - reflex
 - reflex-dom
@@ -21,6 +23,7 @@ dependencies:
 - aeson
 - time
 - text
+- either
 
 - common
 

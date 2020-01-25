@@ -11,7 +11,7 @@
 
 module IB2.Service.Server  where
 
-import Database.EventStore
+--import Database.EventStore
 
 import Control.Monad.Trans.Except
 import Control.Exception (try)

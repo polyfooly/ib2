@@ -4,64 +4,55 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE TypeOperators #-}
 {-# LANGUAGE DeriveGeneric #-}
---TEMP
+{-# LANGUAGE RecordWildCards #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE ScopedTypeVariables #-}
 
 module Posts where
 
-import Servant
+import Data.Time
+
 import Network.Wai.Handler.Warp (run)
 import Control.Concurrent.STM
 import Control.Concurrent.Async (concurrently_)
 
+import Servant
 import Database.EventStore
 
-import IB2.Service.Reducer
+import IB2.Service
+import IB2.Service.Types
+import IB2.Service.Events
 
 import Posts.API
+import Posts.Server
 import Posts.Events.Handlers
 import Posts.Types as P
 
---TEMP
-import Control.Monad.IO.Class
-import Control.Lens
-import IB2.Types
 
+app :: EventSettings -> TVar PostsState -> Application
+app conf mstate = serve postsAPI $ postsServer conf mstate
 
-testHandler = return "test"
+postsReducer :: EventSettings -> TVar PostsState -> IO ()
+postsReducer conf mstate = reducer conf mstate postsHandleResolved
 
-defaultState = PostsState { posts = [ P.Post "empty" 0 ] }
+defaultDate = UTCTime (fromGregorian 0 0 0) 0
+defaultPost = P.Post (HashedPost (PostData defaultDate [] "" 0 []) 1) 1
+defaultState = PostsState 
+    { posts = [ defaultPost ]
+    , postsLastIndex = 0
+    , threads = [] }
 
-serverT :: TVar PostsState -> ServerT PostsAPI STM
-serverT state =
-         testHandler
-    :<|> getPost
-    :<|> emptyServer'
-         where
-             getPost id' = do
-                 st <- readTVar state
-                 return $ (posts st) ^? element id'
+postsService :: ServiceSettings -> IO ()
+postsService ServiceSettings{..} = do
+    let connSettings = defaultSettings
+            { s_defaultUserCredentials = Just $ eventCreds }
 
-stmToHandler :: STM a -> Handler a
-stmToHandler = liftIO . atomically
+    conn <- connect connSettings (Static "127.0.0.1" $ eventPort)
+    mstate <- initStIO defaultState
 
-server :: TVar PostsState -> Server PostsAPI
-server state = hoistServer postsAPI stmToHandler $ serverT state
+    let eventSettings = EventSettings
+            { streamName = "posts"
+            , eventConn = conn }
 
-app :: TVar PostsState -> Application
-app state = serve postsAPI $ server state
-
-postsReducer :: Connection -> TVar PostsState -> IO ()
-postsReducer conn state = reducer conn state "posts" postsHandleResolved
-
-service :: Int -> IO ()
-service port = do
-    let creds = credentials "admin" "547455"
-        settings = defaultSettings
-            { s_defaultUserCredentials = Just creds }
-
-    conn <- connect settings (Static "127.0.0.1" 5475)
-    state <- newTVarIO defaultState
-
-    concurrently_ (run port $ app state) (postsReducer conn state)
+    concurrently_ (run webPort
+        (app eventSettings mstate)) 
+        (postsReducer eventSettings mstate)

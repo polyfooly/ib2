@@ -5,6 +5,7 @@
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE FunctionalDependencies #-}
 
 module IB2.Service.Reducer.Types where
 
@@ -16,21 +17,25 @@ import IB2.Service.Events
 
 
 class (Monad m) => MStateM m where --Mutable state monad 
-    runS :: m () -> IO ()
+    runSt :: m s -> IO s
 
-class (MStateM m) => MState m v where --Mutable state 
-    modify :: v s -> (s -> s) -> m () 
+class (MStateM m) => MState m v | v -> m where --Mutable state container (e.g. TVar)
+    modifySt :: v s -> (s -> s) -> m () 
+    readSt :: v s -> m s
+    initStIO :: s -> IO (v s)
 
 class Event' e => Handleable e s where --Handleable event for specific service
-    handle :: (MState m v) => e -> v s -> m ()
+    handle :: (MState m v) => e -> v s -> IO ()
+
 
 instance MStateM STM where 
-    runS = atomically
+    runSt = atomically
     
 instance MState STM TVar where
-    modify = modifyTVar
+    modifySt = modifyTVar
+    readSt = readTVar
+    initStIO = newTVarIO
 
---  TODO: Refactor it all...
 type ResolvedHandler m v s = ResolvedEvent -> v s -> m ()
 type HandlerSelector m v s = EventType ->
      ResolvedHandler m v s -> ResolvedHandler m v s

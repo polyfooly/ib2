@@ -37,9 +37,10 @@ type RecentOpsHeaders =
 type PostsCAPI = --Command API
     "post" :> ReqBody '[JSON] PostData :> Post '[JSON] (Maybe PostID)
 
+type PostsCQAPI = PostsCAPI :<|> PostsQAPI
+
 type PostsAPI =
     "api" :> "v1" :> ( PostsTestAPI 
-                  :<|> PostsCAPI 
-                  :<|> PostsQAPI )
+                  :<|> PostsCQAPI )
 
 postsAPI = Proxy @PostsAPI

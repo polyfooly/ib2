@@ -8,7 +8,7 @@
 
 module IB2.Frontend.App where
 
-import Data.Map as Map
+--import Data.Map as Map
 import Data.Time
 import Data.Functor
 
@@ -30,7 +30,7 @@ bodyElement = do
         views <- dyn $ route <&> \case
             ["boards", id'] -> boardView id'
             ["thread", id'] -> threadView id'
-            _    -> mainView
+            _               -> mainView
 
     --replyEvt <- defaultThread
     blank
@@ -42,19 +42,11 @@ defaultThread =
 defaultThreadData = Thread
     { opPost = defaultPostData
     , threadPosts =
-        [ defaultPostData { postId = 2 }
-        , defaultPostData { postId = 3 }
-        , defaultPostData { postId = 4 }
+        [ defaultPostData { postIndex = 2 }
+        , defaultPostData { postIndex = 3 }
+        , defaultPostData { postIndex = 4 }
         ]
     }
 
-defaultPostData = Post 
-    { postAttachments = []
-    , postId = 1
-    , postText = "default post text"
-    , postDate = defaultDateTime
-    , parentId = 0
-    , postTags = []
-    }
-
-defaultDateTime = UTCTime (fromGregorian 0 0 0) 0
+defaultDate = UTCTime (fromGregorian 0 0 0) 0
+defaultPostData = Post (HashedPost (PostData defaultDate [] "" 0 []) 1) 1

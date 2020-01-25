@@ -5,14 +5,20 @@
 {-# LANGUAGE DeriveAnyClass #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE TypeApplications #-}
 
 module IB2.Service.Events.Types where
 
 import Data.Aeson
+import Data.Proxy
 import GHC.Generics
 
 import Database.EventStore
 
+
+data EventSettings = EventSettings
+    { streamName :: StreamName
+    , eventConn :: Connection }
 
 data EventStoreConfig = EventStoreConfig
     { hostAdress    :: String
@@ -21,11 +27,11 @@ data EventStoreConfig = EventStoreConfig
     , credsPassword :: String
     } deriving (Generic, ToJSON, FromJSON)
 
-class (ToJSON d, FromJSON d) => Event' d where
-    eventType :: d -> EventType
+class (ToJSON e, FromJSON e) => Event' e where
+    eventType :: Proxy e -> EventType
 
-    create :: d -> Event
-    create d = createEvent (eventType (undefined :: d)) Nothing (withJson d)
+    create :: e -> Event
+    create evt = createEvent (eventType (Proxy @e)) Nothing (withJson evt)
 
-    parse :: ResolvedEvent -> Maybe d
+    parse :: ResolvedEvent -> Maybe e
     parse = resolvedEventDataAsJson

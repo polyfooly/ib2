@@ -14,6 +14,7 @@ ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Widentities  -Wno-simplif
 dependencies:
 - base
 - servant-server
+- servant-pagination
 - servant-client
 - eventstore
 - aeson
@@ -22,6 +23,9 @@ dependencies:
 - async
 - stm
 - text
+- time
+- hashable
+- hashable-time
 - lens
 
 - ib2-lib

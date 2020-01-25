@@ -5,7 +5,13 @@
 
 module Main where
 
-import qualified Posts
+import Database.EventStore
+
+import Posts
+import IB2.Service.Types
 
 main :: IO ()
-main = Posts.service 5474
+main = postsService $ ServiceSettings
+    { webPort = 5474
+    , eventPort = 5475
+    , eventCreds = credentials "admin" "547455" }
