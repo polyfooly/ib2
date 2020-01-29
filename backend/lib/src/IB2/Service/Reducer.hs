@@ -10,6 +10,8 @@ module IB2.Service.Reducer
     , module IB2.Service.Reducer.Types
     ) where
 
+import Control.Monad
+
 import Data.Proxy
 
 import Database.EventStore
@@ -60,11 +62,6 @@ reducer EventSettings{..} state handler = do
     --    conn streamName True Nothing Nothing Nothing
     upstreamSubscription <- subscribe eventConn streamName True Nothing
 
-    let loop :: IO () 
-        loop = do
-            event <- nextEvent upstreamSubscription
-            handler event state
-            loop
-    loop
-
-    return ()
+    void $ forever $ do
+        event <- nextEvent upstreamSubscription
+        handler event state

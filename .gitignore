@@ -27,8 +27,7 @@ cabal-dev
 
 .HTF/
 
-result
-result-2
+/result*
 
 hie-wrapper.sh
 

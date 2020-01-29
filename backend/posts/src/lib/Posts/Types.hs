@@ -49,18 +49,23 @@ data Post = Post
     , postIndex :: PostIndex 
     } deriving (Eq, Show, Generic, ToJSON, FromJSON, Hashable)
 
-instance HasPagination Post "date" where
-    type RangeType Post "date" = PostDate
-    getFieldValue _ = postDate . postData . hashedPost
+instance HasPagination Thread "date" where
+    type RangeType Thread "date" = PostDate
+    getFieldValue _ = postDate . postData . hashedPost . opPost
 
 recentOpsDefaultRange :: Range "date" PostDate
-recentOpsDefaultRange = getDefaultRange (Proxy @Post)
+recentOpsDefaultRange = getDefaultRange (Proxy @Thread)
 
 data Thread = Thread
     { opPost :: Post
     , threadPosts :: [Post]
-    } deriving (Generic, ToJSON, FromJSON)
+    , threadMetadata :: ThreadMetadata
+    } deriving (Eq, Show, Generic, ToJSON, FromJSON)
 
+data ThreadMetadata = ThreadMetadata
+    { postCount :: Int 
+    , subthreads :: [ThreadMetadata]
+    } deriving (Eq, Show, Generic, ToJSON, FromJSON)
 
 data PostsState = PostsState
     { posts :: [Post]
