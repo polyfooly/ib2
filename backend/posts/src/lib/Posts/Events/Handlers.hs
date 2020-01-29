@@ -23,19 +23,50 @@ import IB2.Service.Events
 -- TODO: rewrite handleable abstraction with eventType as typeclass param
 -- and corresponding event structure as associate type
 instance Handleable PostPosted PostsState where
-    handle event state =
-        runSt $ modifySt state (\st ->
-            let newLastIndex = postsLastIndex st + 1
-                newPost = Post
-                    { hashedPost = postedPost event
-                    , postIndex = newLastIndex }
-            in st 
-                { posts = newPost : posts st
-                , postsLastIndex = newLastIndex 
-                })
+    handle event state = runSt $ do 
+        st' <- readSt state
+        
+        let hashedNewPost = postedPost event
+            parent = parentId $ postData hashedNewPost
+        
+        if parent `elem` map (postId . hashedPost) (posts st')
+            then modifySt state (\st ->
+                let newLastIndex = postsLastIndex st + 1
+                    newPost = Post
+                        { hashedPost = hashedNewPost
+                        , postIndex = newLastIndex }
+                    -- todo: subthreads
+                    threads' = case parent of
+                        0 -> createNewThread newPost : threads st
+                        _ -> appendToThreads newPost $ threads st
+                in st
+                    { posts = newPost : posts st
+                    , threads = threads'
+                    , postsLastIndex = newLastIndex })
+            else pure ()
+
+-- todo: subthreads
+appendToThreads post threads' = 
+    map (\th -> if (postId . hashedPost . opPost) th == (postId . hashedPost) post
+        then th 
+            { threadPosts = post : threadPosts th
+            , threadMetadata = 
+                let md = threadMetadata th
+                in md { postCount = postCount md + 1 }
+            }
+        else th ) threads'
+
+createNewThread post = Thread
+    { opPost = post
+    , threadPosts = []
+    , threadMetadata = ThreadMetadata
+        { postCount = 0
+        , subthreads = [] }
+    }
 
 instance Handleable PostDeleted PostsState where
     handle event state =
+        -- todo: delete from thread, counters, etc.
         runSt $ modifySt state (\st -> st
             { posts = filter
                 ((/=) (deletedPostId event) . postId . hashedPost)

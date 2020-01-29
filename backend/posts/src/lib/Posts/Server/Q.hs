@@ -12,8 +12,6 @@ module Posts.Server.Q where
 import Data.List
 import Data.Maybe
 
---import Database.EventStore
-
 import Servant
 import Servant.Pagination
 
@@ -28,34 +26,43 @@ postsQServer :: MState m v
     => EventSettings
     -> v PostsState -> ServerT PostsQAPI IO
 postsQServer EventSettings{..} mstate = 
-         ( postById
-    :<|> recentOpsByTag )
-    :<|> threadById
-    :<|> threadRepliesById
+         postById
+    :<|> ( threadById
+    :<|> recentThreadsByTag )
+    -- :<|> threadMetadataById
     where
+        postById :: PostID -> IO (Maybe P.Post)
         postById id' = do
             st <- getSt
             pure $ find ((==) id' . postId . hashedPost) $ posts st
 
+        threadById :: PostID -> IO (Maybe Thread)
         threadById id' = do
             st <- getSt
             pure $ find ((==) id' . postId . hashedPost . opPost) $ threads st
 
-        threadRepliesById id' = do
+        {- threadMetadataById :: PostID -> IO (Maybe ThreadMetadata)
+        threadMetadataById id' = do
             thread <- threadById id'
-            pure $ map (postId . hashedPost) <$> threadPosts <$> thread
+            pure $ threadMetadata <$> thread -}
 
-        recentOpsByTag ::
-               PostTag
-            -> Maybe (Ranges '["date"] P.Post) 
-            -> IO (Headers RecentOpsHeaders [P.Post])
-        recentOpsByTag tag mrange = do
+        recentThreadsByTag ::
+               PostTag -> Maybe Int
+            -> Maybe (Ranges '["date"] Thread) 
+            -> IO (Headers RecentOpsHeaders [Thread])
+        recentThreadsByTag tag postsAmount mrange = do
             st <- getSt
             let range = fromMaybe recentOpsDefaultRange (mrange >>= extractRange)
-                ops = filter (elem tag . postTags . postData . hashedPost) $ 
-                      map opPost $ threads st
+                ths = filter
+                    (elem tag . postTags . postData . hashedPost . opPost) $
+                    threads st
+                thsPage = applyRange range ths
+                result = case postsAmount of
+                    Just n -> map (\th -> th
+                        { threadPosts = take n $ threadPosts th })
+                        thsPage
+                    Nothing -> thsPage
 
-            addHeader (length ops) <$>
-                returnRange range (applyRange range ops)
+            addHeader (length ths) <$> returnRange range result
 
         getSt = runSt $ readSt mstate

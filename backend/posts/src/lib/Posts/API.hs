@@ -20,19 +20,20 @@ type PostsTestAPI = "postTest" :> Get '[JSON] String
 
 type PostsQAPI = --Query API
     "posts" :> (
-        Capture "id" PostID :> Get '[JSON] (Maybe P.Post) :<|>
-
-        "ops" :> Capture "tag" PostTag :>
-            Header "Range" (Ranges '["date"] P.Post) :>
-            GetPartialContent '[JSON] (Headers RecentOpsHeaders [P.Post])
+        Capture "id" PostID :> Get '[JSON] (Maybe P.Post)
     ) :<|> 
     "threads" :> (
         Capture "id" PostID :> Get '[JSON] (Maybe Thread) :<|>
-        Capture "id" PostID :> "replies" :> Get '[JSON] (Maybe [PostID])
+        "recent" :> 
+            Capture "tag" PostTag :>
+            QueryParam "posts_amount" Int :>
+            Header "Range" (Ranges '["date"] Thread) :>
+            GetPartialContent '[JSON] (Headers RecentOpsHeaders [Thread]) {- :<|>
+        Capture "id" PostID :> "metadata" :> Get '[JSON] (Maybe ThreadMetadata) -}
     )
 
 type RecentOpsHeaders =
-    Header "Total-Count" Int ': PageHeaders '["date"] P.Post
+    Header "Total-Count" Int ': PageHeaders '["date"] Thread
 
 type PostsCAPI = --Command API
     "post" :> ReqBody '[JSON] PostData :> Post '[JSON] (Maybe PostID)

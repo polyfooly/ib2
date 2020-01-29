@@ -18,17 +18,17 @@ postEl post = do
     clk <- el "div" $ do
         clk <- el "div" $ do -- title
             el "span" $
-                display $ postDate <$> post
+                display $ postDate . postData . hashedPost <$> post
             el "span" $
-                display $ postId <$> post
+                display $ postIndex <$> post
             
             button "Reply"
 
         el "div" $ do -- body
             el "div" $
-                dynText $ postText <$> post
+                dynText $ postText . postData . hashedPost <$> post
 
         return clk
     
     -- reply with id
-    return $ tagPromptlyDyn (postId <$> post) clk
+    return $ tagPromptlyDyn (postIndex <$> post) clk

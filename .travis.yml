@@ -3,4 +3,4 @@ script: |
   nix-env -iA cachix -f https://cachix.org/api/v1/install && \
   cachix use polyfooly && \
   nix-shell -A shells.ghc --run "make configure; make build" && \
-  nix-shell -A shells.ghcjs --run "make build-js; make build-css"
+  nix-shell -A shells.ghcjs --run "make build-js && make build-css"
