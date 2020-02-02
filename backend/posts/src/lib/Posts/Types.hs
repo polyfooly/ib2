@@ -64,7 +64,7 @@ data Thread = Thread
 
 data ThreadMetadata = ThreadMetadata
     { postCount :: Int 
-    , subthreads :: [ThreadMetadata]
+    , subthreads :: [PostID]
     } deriving (Eq, Show, Generic, ToJSON, FromJSON)
 
 data PostsState = PostsState
