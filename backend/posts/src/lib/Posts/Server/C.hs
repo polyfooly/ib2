@@ -10,6 +10,7 @@ module Posts.Server.C where
 
 import Data.Time
 import Data.Hashable
+import Data.Either.Combinators
 
 import Database.EventStore
 
@@ -18,11 +19,11 @@ import Servant
 import IB2.Service.Server
 import IB2.Service.Types
 import IB2.Service.Events
-import IB2.Service.Events.Types
 
 import Posts.API
 import Posts.Types
 import Posts.Events
+import Posts.Utils
 
 
 postsCServer :: (MState m v)
@@ -30,19 +31,23 @@ postsCServer :: (MState m v)
 postsCServer EventSettings{..} mstate =
     postPost
     where
+        postPost :: PostData -> IO (Maybe PostID)
         postPost post = do
-            timestamp <- getCurrentTime
+            st <- runSt $ readSt mstate
 
-            let timedPost = post { postDate = timestamp }
-                newPostHash = hash timedPost
-                newPost = HashedPost
-                    { postData = timedPost
-                    , postId = newPostHash }
-                evt = create $ PostPosted newPost
+            if isCorrectParent (posts st) (parentId post)
+                then do
+                    timestamp <- getCurrentTime
 
-            sending <- sendEvent eventConn streamName anyVersion evt Nothing
-            res <- waitCatch sending
+                    let timedPost = post { postDate = timestamp }
+                        newPostHash = toInteger $ hash timedPost
+                        newPost = HashedPost
+                            { postData = timedPost
+                            , postId = newPostHash }
+                        evt = create $ PostPosted newPost
 
-            pure $ case res of
-                Left _ -> Nothing
-                Right _ -> Just newPostHash
+                    sending <- sendEvent eventConn streamName anyVersion evt Nothing
+                    res <- waitCatch sending
+
+                    pure $ newPostHash <$ rightToMaybe res
+                else pure Nothing

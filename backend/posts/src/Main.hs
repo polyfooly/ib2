@@ -14,4 +14,4 @@ main :: IO ()
 main = postsService $ ServiceSettings
     { webPort = 5474
     , eventPort = 5475
-    , eventCreds = credentials "admin" "547455" }
+    , eventCreds = credentials "admin" "changeit" }

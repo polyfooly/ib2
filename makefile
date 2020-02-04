@@ -38,4 +38,5 @@ $(BULMA):
 $(WEBAPP_OUTPUT):
 	mkdir -p $(WEBAPP_OUTPUT)
 build-css: $(WEBAPP_OUTPUT) $(BULMA)
-	sass --no-source-map frontend/src/styles/main.scss:$(WEBAPP_OUTPUT)/main.css
+	mkdir -p $(WEBAPP_OUTPUT)/styles
+	sass --no-source-map frontend/src/styles/main.scss:$(WEBAPP_OUTPUT)/styles/main.css

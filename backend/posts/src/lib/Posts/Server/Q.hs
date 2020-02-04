@@ -20,6 +20,7 @@ import IB2.Service.Events
 
 import Posts.API
 import Posts.Types as P
+--import Posts.Utils
 
 
 postsQServer :: MState m v 
@@ -29,7 +30,6 @@ postsQServer EventSettings{..} mstate =
          postById
     :<|> ( threadById
     :<|> recentThreadsByTag )
-    -- :<|> threadMetadataById
     where
         postById :: PostID -> IO (Maybe P.Post)
         postById id' = do
@@ -41,15 +41,10 @@ postsQServer EventSettings{..} mstate =
             st <- getSt
             pure $ find ((==) id' . postId . hashedPost . opPost) $ threads st
 
-        {- threadMetadataById :: PostID -> IO (Maybe ThreadMetadata)
-        threadMetadataById id' = do
-            thread <- threadById id'
-            pure $ threadMetadata <$> thread -}
-
         recentThreadsByTag ::
                PostTag -> Maybe Int
             -> Maybe (Ranges '["date"] Thread) 
-            -> IO (Headers RecentOpsHeaders [Thread])
+            -> IO (Paginated Thread)
         recentThreadsByTag tag postsAmount mrange = do
             st <- getSt
             let range = fromMaybe recentOpsDefaultRange (mrange >>= extractRange)
@@ -63,6 +58,6 @@ postsQServer EventSettings{..} mstate =
                         thsPage
                     Nothing -> thsPage
 
-            addHeader (length ths) <$> returnRange range result
+            pure $ Paginated result $ length ths
 
         getSt = runSt $ readSt mstate

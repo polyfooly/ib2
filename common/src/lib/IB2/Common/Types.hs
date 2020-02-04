@@ -13,6 +13,7 @@
 module IB2.Common.Types
     ( module IB2.Common.Types 
     , module Posts.Types
+    , Paginated(..)
     ) where
 
 import qualified Data.Text as T
@@ -22,6 +23,8 @@ import GHC.TypeLits
 import Servant
 import Servant.Pagination
  
+import IB2.Service.Server.Types
+
 import Posts.Types
 
 

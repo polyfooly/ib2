@@ -3,12 +3,13 @@
 
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE DeriveAnyClass #-}
-{-# LANGUAGE StandaloneDeriving #-}
+--{-# LANGUAGE StandaloneDeriving #-}
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE TypeApplications #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE TypeFamilies #-}
+{-# LANGUAGE TypeOperators #-}
 
 module Posts.Types where
 
@@ -16,6 +17,8 @@ import Data.Text (Text)
 import Data.Aeson
 import Data.Time
 import Data.Proxy
+
+import Servant hiding (Post)
 
 import Data.Hashable
 import Data.Hashable.Time()
@@ -25,9 +28,9 @@ import GHC.Generics
 import Servant.Pagination
 
 
-type AttachmentID = String
-type PostID = Int
-type PostIndex = Int
+type AttachmentID = Integer
+type PostID = Integer
+type PostIndex = Integer
 type PostTag = Text
 type PostDate = UTCTime
 

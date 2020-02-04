@@ -22,11 +22,13 @@ dependencies:
 - warp
 - async
 - stm
+- either
 - text
 - time
 - hashable
 - hashable-time
 - lens
+- ilist
 
 - ib2-lib
 

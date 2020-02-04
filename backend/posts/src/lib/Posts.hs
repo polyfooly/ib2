@@ -35,11 +35,18 @@ postsReducer :: EventSettings -> TVar PostsState -> IO ()
 postsReducer conf mstate = reducer conf mstate postsHandleResolved
 
 defaultDate = UTCTime (fromGregorian 0 0 0) 0
-defaultPost = P.Post (HashedPost (PostData defaultDate [] "" 0 []) 1) 1
+defaultPost = P.Post (HashedPost (PostData defaultDate [] "text" 0 ["b"]) 1) 1
+defaultThread = Thread
+    { opPost = defaultPost 
+    , threadPosts = [] 
+    , threadMetadata = ThreadMetadata
+        { postCount = 0
+        , subthreads = [] }
+    }
 defaultState = PostsState 
     { posts = [ defaultPost ]
-    , postsLastIndex = 0
-    , threads = [] }
+    , postsLastIndex = 1
+    , threads = [ defaultThread ] }
 
 postsService :: ServiceSettings -> IO ()
 postsService ServiceSettings{..} = do
@@ -53,6 +60,6 @@ postsService ServiceSettings{..} = do
             { streamName = "posts"
             , eventConn = conn }
 
-    concurrently_ (run webPort
-        (app eventSettings mstate)) 
+    concurrently_ 
+        (run webPort $ app eventSettings mstate)
         (postsReducer eventSettings mstate)
