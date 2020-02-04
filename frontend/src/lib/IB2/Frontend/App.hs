@@ -4,40 +4,37 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RecursiveDo #-}
 {-# LANGUAGE LambdaCase #-}
---{-# LANGUAGE ScopedTypeVariables #-}
+{-# LANGUAGE ViewPatterns #-}
 
 module IB2.Frontend.App where
 
---import Data.Map as Map
-import Data.Time
 import Data.Functor
 
-import Reflex
+import Web.HttpApiData
+
 import Reflex.Dom
-import Reflex.Dom.Contrib.Router
 
-import IB2.Common.Types
-
-import IB2.Frontend.UI.Thread
 import IB2.Frontend.Views.Main
 import IB2.Frontend.Views.Board
 import IB2.Frontend.Views.Thread
+--import IB2.Frontend.Routes
+import IB2.Frontend.Router
 
 
-bodyElement :: MonadWidget t m => m ()
+bodyElement :: (MonadWidget t m) => m ()
 bodyElement = do
-    rec route <- partialPathRoute "" . switchPromptlyDyn =<< holdDyn never views
-        views <- dyn $ route <&> \case
-            ["boards", id'] -> boardView id'
-            ["thread", id'] -> threadView id'
-            _               -> mainView
+    --pb <- getPostBuild
 
-    --replyEvt <- defaultThread
+    rec currRoute <- routeApp . switchPromptlyDyn =<< holdDyn never views
+        views <- dyn $ currRoute <&> \case
+            ["board", tag']                       -> boardView tag'
+            ["thread", readTextData -> Right id'] -> threadView id'
+            _                                     -> mainView
     blank
 
-defaultThread :: MonadWidget t m => m (Event t Int)
+{-defaultThread :: MonadWidget t m => m (Event t Int)
 defaultThread =
-    threadEl $ constDyn defaultThreadData
+    threadEl ThreadFull $ constDyn defaultThreadData
 
 defaultThreadData = Thread
     { opPost = defaultPostData
@@ -49,4 +46,4 @@ defaultThreadData = Thread
     }
 
 defaultDate = UTCTime (fromGregorian 0 0 0) 0
-defaultPostData = Post (HashedPost (PostData defaultDate [] "" 0 []) 1) 1
+defaultPostData = Post (HashedPost (PostData defaultDate [] "" 0 []) 1) 1-}

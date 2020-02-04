@@ -20,6 +20,10 @@ dependencies:
 - reflex
 - reflex-dom
 - reflex-dom-contrib
+- lens
+- http-api-data
+- uri-bytestring
+- bytestring
 - aeson
 - time
 - text
