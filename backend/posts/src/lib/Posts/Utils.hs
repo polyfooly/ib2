@@ -12,8 +12,8 @@ import Posts.Types
 isCorrectParent _ 0 = True
 isCorrectParent posts' id' = id' `elem` map (postId . hashedPost) posts'
 
-isThreadReplyId posts' id' = id' `elem` filter (/= 0) (
-    map (parentId . postData . hashedPost) posts')
+isThreadReplyId threads' id' = id' `elem` filter (/= 0) (
+    map (parentId . postData . hashedPost . opPost) threads')
 
 modifyThread id' threads' f =
     case findIndex ((==) id' . postId . hashedPost . opPost) threads' of

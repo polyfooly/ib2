@@ -44,7 +44,7 @@ instance Handleable PostPosted PostsState where
 
                     newThreads = case parent of
                         0 -> createNewThread newPost : threads'
-                        (isThreadReplyId posts' -> True) ->
+                            (isThreadReplyId threads' -> True) ->
                             let newThread = createNewThread newPost
                             in newThread : 
                                 addSubThread newThread
@@ -77,14 +77,15 @@ type instance AllHandleable (t ': ts) s = (Handleable t s, AllHandleable ts s)
 data Events :: [*] -> * -> * where
     C :: AllHandleable (t ': ts) s => Proxy t -> Events ts s -> Events (t ': ts) s
     N :: Events '[] s
-    D :: AllHandleable ts s => Proxy s -> Proxy ts -> Events ts s
 
 hSelector :: MState m v => Events ts s -> HandlerSelector IO v s
 hSelector (C p c) t def = tryAs p t $ hSelector c t def
 hSelector _ _ def = def
 
-postsEvents = D (Proxy @PostsState) $ Proxy 
-    @'[PostPosted, PostDeleted, TestEvent]
+postsEvents = C
+    (Proxy @PostPosted) $ C
+    (Proxy @PostDeleted) $ C
+    (Proxy @TestEvent) $ N
 
 postsSelector :: MState m v => HandlerSelector IO v PostsState
 postsSelector = hSelector postsEvents
