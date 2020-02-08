@@ -54,14 +54,22 @@ reducer :: (MState m v)
     -> ResolvedHandler IO v s 
     -> IO ()
 reducer EventSettings{..} state handler = do
-    --let evt = create $ PostPosted $ P.Post "text" 0
-    --as <- sendEvent conn streamName anyVersion evt $ Nothing
-    --wait as >> putStrLn "passed"
+    -- replay from the beginning
+    replaySubscription <- subscribeFrom eventConn streamName True Nothing Nothing Nothing
 
-    --replaySubscription <- subscribeFrom 
-    --    conn streamName True Nothing Nothing Nothing
+    let handleNext subscription = do
+            event <- nextEvent subscription
+            handler event state
+
+        replayEvents = do
+            caughtUp <- hasCaughtUp replaySubscription
+            unless caughtUp $ handleNext replaySubscription >> replayEvents
+
+        handlingLoop = void . forever . handleNext
+
+    replayEvents
+
+    unsubscribe replaySubscription
     upstreamSubscription <- subscribe eventConn streamName True Nothing
 
-    void $ forever $ do
-        event <- nextEvent upstreamSubscription
-        handler event state
+    handlingLoop upstreamSubscription
