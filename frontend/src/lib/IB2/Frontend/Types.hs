@@ -6,4 +6,7 @@ import Data.Text (Text)
 import Reflex.Dom
 
 
-type GoTo t m = m (Event t Text)
+type Route = Text
+
+type GoTo t m = m (Event t Route)
+  

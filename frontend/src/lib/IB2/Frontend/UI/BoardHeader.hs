@@ -11,16 +11,30 @@ import Data.Text (Text)
 
 import Reflex.Dom
 
-import IB2.Frontend.Types
+import IB2.Common.Types
 
+import IB2.Frontend.Types
+import IB2.Frontend.Routes
+import IB2.Frontend.Utils
+
+
+boardHeaderEl :: MonadWidget t m => Dynamic t Text -> GoTo t m
+boardHeaderEl title = do
+    goTo <- navBar
+    dynText title
+
+    pure goTo
 
 navBar :: MonadWidget t m => GoTo t m
 navBar = do
-    let goTo = undefined
-    return goTo 
+    let boards = constDyn [ "b", "crypt" ]
+    goTos <- simpleList boards navButton
+        
+    pure $ switchPromptlyDyn $ leftmost <$> goTos
 
-boardHeaderEl :: MonadWidget t m => Text -> GoTo t m
-boardHeaderEl title = do
-    goTo <- navBar
-
-    return goTo
+navButton :: MonadWidget t m 
+    => Dynamic t PostTag
+    -> GoTo t m
+navButton tag' = do
+    click <- dynButton tag'
+    pure $ tagPromptlyDyn (boardRoute <$> tag') click

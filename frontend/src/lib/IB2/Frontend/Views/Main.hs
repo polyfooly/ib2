@@ -2,17 +2,17 @@
 -- SPDX-License-Identifier: Apache-2.0
 
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE RecursiveDo #-}
+--{-# LANGUAGE RecursiveDo #-}
 
 module IB2.Frontend.Views.Main where
-
-import Data.Text (Text)
 
 import Reflex.Dom
 
 import IB2.Frontend.Types
-import IB2.Frontend.Views.Board
+import IB2.Frontend.Routes
 
 
 mainView :: MonadWidget t m => GoTo t m
-mainView = boardView "b"
+mainView = do
+    pb <- getPostBuild
+    pure $ boardRoute "b" <$ pb

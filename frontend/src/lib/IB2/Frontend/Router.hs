@@ -28,7 +28,7 @@ routeApp :: (_)
 routeApp pathUpdates = do
     route' updateUrl parseParts pathUpdates
     where
-        
+
         toPath :: Text -> ByteString
         toPath dynpath = T.encodeUtf8 $ "/" <> cleanT dynpath
 

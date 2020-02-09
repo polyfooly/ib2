@@ -14,8 +14,12 @@ import IB2.Common.Types
 import IB2.Frontend.UI.Post
 
 
-threadEl :: MonadWidget t m => Dynamic t Thread -> m (Event t Int)
-threadEl thread = 
+data ThreadMode = ThreadPreview | ThreadFull
+
+threadEl :: MonadWidget t m 
+    => ThreadMode
+    -> Dynamic t Thread -> m (Event t PostID)
+threadEl mode thread = 
     el "div" $ do
         opReply <- postEl $ opPost <$> thread
         
@@ -26,4 +30,4 @@ threadEl thread =
         let replies = (opReply :) <$> bodyReplies
             reply = switchPromptlyDyn $ leftmost <$> replies
 
-        return reply
+        pure reply
