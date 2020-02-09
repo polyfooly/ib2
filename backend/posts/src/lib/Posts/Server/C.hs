@@ -39,10 +39,10 @@ postsCServer EventSettings{..} mstate =
                 then do
                     timestamp <- getCurrentTime
 
-                    let timedPost = post { postDate = timestamp }
-                        newPostHash = toInteger $ hash timedPost
-                        newPost = HashedPost
-                            { postData = timedPost
+                    let newPostHash = toInteger $ hash post
+                        newPost = AcceptedPost
+                            { postData = post
+                            , postDate = timestamp
                             , postId = newPostHash }
                         evt = create $ PostPosted newPost
 

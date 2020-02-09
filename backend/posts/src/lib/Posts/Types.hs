@@ -18,10 +18,7 @@ import Data.Aeson
 import Data.Time
 import Data.Proxy
 
-import Servant hiding (Post)
-
 import Data.Hashable
-import Data.Hashable.Time()
 
 import GHC.Generics
 
@@ -35,26 +32,27 @@ type PostTag = Text
 type PostDate = UTCTime
 
 data PostData = PostData
-    { postDate :: PostDate
-    , postAttachments :: [AttachmentID]
+    { postAttachments :: [AttachmentID]
     , postText :: Text
     , parentId :: PostID
     , postTags :: [PostTag]
     } deriving (Eq, Show, Generic, ToJSON, FromJSON, Hashable)
 
-data HashedPost = HashedPost
+data AcceptedPost = AcceptedPost
     { postData :: PostData
+    , postDate :: PostDate
     , postId :: PostID 
-    } deriving (Eq, Show, Generic, ToJSON, FromJSON, Hashable)
+    } deriving (Eq, Show, Generic, ToJSON, FromJSON)
 
 data Post = Post
-    { hashedPost :: HashedPost
+    { acceptedPost :: AcceptedPost
     , postIndex :: PostIndex 
-    } deriving (Eq, Show, Generic, ToJSON, FromJSON, Hashable)
+    } deriving (Eq, Show, Generic, ToJSON, FromJSON)
 
 instance HasPagination Thread "date" where
     type RangeType Thread "date" = PostDate
-    getFieldValue _ = postDate . postData . hashedPost . opPost
+    getFieldValue _ th = maximum $ map (postDate . acceptedPost) $
+        opPost th : threadPosts th
 
 recentOpsDefaultRange :: Range "date" PostDate
 recentOpsDefaultRange = getDefaultRange (Proxy @Thread)

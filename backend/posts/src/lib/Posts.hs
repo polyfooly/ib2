@@ -13,6 +13,8 @@ import Data.Time
 
 import Network.Wai.Handler.Warp (run)
 import Control.Concurrent.STM
+import qualified Control.Concurrent.STM.Lock as Lock
+import Control.Concurrent.STM.Lock (Lock)
 import Control.Concurrent.Async (concurrently_)
 
 import Servant
@@ -31,11 +33,11 @@ import Posts.Types as P
 app :: EventSettings -> TVar PostsState -> Application
 app conf mstate = serve postsAPI $ postsServer conf mstate
 
-postsReducer :: EventSettings -> TVar PostsState -> IO ()
-postsReducer conf mstate = reducer conf mstate postsHandleResolved
+postsReducer :: EventSettings -> TVar PostsState -> Lock -> IO ()
+postsReducer conf mstate lock = reducer conf mstate lock postsHandleResolved
 
 defaultDate = UTCTime (fromGregorian 0 0 0) 0
-defaultPost = P.Post (HashedPost (PostData defaultDate [] "text" 0 ["b"]) 1) 1
+defaultPost = P.Post (AcceptedPost (PostData [] "text" 0 ["b"]) defaultDate 1) 1
 defaultThread = Thread
     { opPost = defaultPost 
     , threadPosts = [] 
@@ -55,11 +57,16 @@ postsService ServiceSettings{..} = do
 
     conn <- connect connSettings (Static "127.0.0.1" $ eventPort)
     mstate <- initStIO defaultState
+    serverLock <- atomically $ Lock.newAcquired
 
     let eventSettings = EventSettings
             { streamName = "posts"
             , eventConn = conn }
 
-    concurrently_ 
-        (run webPort $ app eventSettings mstate)
-        (postsReducer eventSettings mstate)
+        waitUntilReplayed = atomically $ Lock.wait serverLock 
+        server = do
+            waitUntilReplayed
+            run webPort $ app eventSettings mstate
+        reducer' = postsReducer eventSettings mstate serverLock
+
+    concurrently_ server reducer'

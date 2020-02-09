@@ -13,12 +13,12 @@ import Reflex.Dom
 import IB2.Common.Types
 
 
-postEl :: MonadWidget t m => Dynamic t Post -> m (Event t Int)
+postEl :: MonadWidget t m => Dynamic t Post -> m (Event t PostIndex)
 postEl post = do
     clk <- el "div" $ do
         clk <- el "div" $ do -- title
             el "span" $
-                display $ postDate . postData . hashedPost <$> post
+                display $ postDate . acceptedPost <$> post
             el "span" $
                 display $ postIndex <$> post
             
@@ -26,9 +26,9 @@ postEl post = do
 
         el "div" $ do -- body
             el "div" $
-                dynText $ postText . postData . hashedPost <$> post
+                dynText $ postText . postData . acceptedPost <$> post
 
         return clk
     
     -- reply with id
-    return $ tagPromptlyDyn (postIndex <$> post) clk
+    pure $ tagPromptlyDyn (postId . acceptedPost <$> post) clk

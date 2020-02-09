@@ -27,41 +27,43 @@ import Posts.Utils
 -- TODO: rewrite handleable abstraction with eventType as typeclass param
 -- and corresponding event structure as associate type, handle using Alternative
 instance Handleable PostPosted PostsState where
-    handle event state = runSt $ do
-        st' <- readSt state
-        
-        let hashedNewPost = postedPost event
-            parent = parentId $ postData hashedNewPost
+    handle event state = do
+        --putStrLn "handling post posted"
+        runSt $ do
+            st' <- readSt state
+            
+            let hashedNewPost = postedPost event
+                parent = parentId $ postData hashedNewPost
 
-        if isCorrectParent (posts st') parent
-            then modifySt state $ \st ->
-                let newLastIndex = postsLastIndex st + 1
-                    posts' = posts st
-                    threads' = threads st
-                    newPost = Post
-                        { hashedPost = hashedNewPost
-                        , postIndex = newLastIndex }
+            if isCorrectParent (posts st') parent
+                then modifySt state $ \st ->
+                    let newLastIndex = postsLastIndex st + 1
+                        posts' = posts st
+                        threads' = threads st
+                        newPost = Post
+                            { acceptedPost = hashedNewPost
+                            , postIndex = newLastIndex }
 
-                    newThreads = case parent of
-                        0 -> createNewThread newPost : threads'
-                            (isThreadReplyId threads' -> True) ->
-                            let newThread = createNewThread newPost
-                            in newThread : 
-                                addSubThread newThread
-                                (appendToThread newPost threads')
-                        _ -> appendToThread newPost threads'
-                in st
-                    { posts = newPost : posts'
-                    , threads = newThreads
-                    , postsLastIndex = newLastIndex }
-            else pure ()
+                        newThreads = case parent of
+                            0 -> createNewThread newPost : threads'
+                            (isThreadReplyId posts' -> True) ->
+                                let newThread = createNewThread newPost
+                                in newThread : 
+                                    addSubThread newThread
+                                    (appendToThread newPost threads')
+                            _ -> appendToThread newPost threads'
+                    in st
+                        { posts = newPost : posts'
+                        , threads = newThreads
+                        , postsLastIndex = newLastIndex }
+                else pure ()
 
 instance Handleable PostDeleted PostsState where
     handle event state =
         -- todo: delete from thread, counters, etc.
         runSt $ modifySt state $ \st -> st
             { posts = filter
-                ((/=) (deletedPostId event) . postId . hashedPost)
+                ((/=) (deletedPostId event) . postId . acceptedPost)
                 (posts st) }
 
 instance Handleable TestEvent PostsState where

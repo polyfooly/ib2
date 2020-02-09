@@ -21,7 +21,7 @@ instance Event' TestEvent where
     eventType = const "testEvent"
 
 data PostPosted = PostPosted
-    { postedPost :: HashedPost
+    { postedPost :: AcceptedPost
     } deriving (Generic, ToJSON, FromJSON)
 instance Event' PostPosted where 
     eventType = const "postPosted"

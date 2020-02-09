@@ -17,6 +17,7 @@ dependencies:
 - servant-pagination
 - servant-client
 - eventstore
+- concurrent-extra
 - aeson
 - wai
 - warp
@@ -26,7 +27,6 @@ dependencies:
 - text
 - time
 - hashable
-- hashable-time
 - lens
 - ilist
 

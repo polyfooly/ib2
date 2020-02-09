@@ -11,6 +11,8 @@ module IB2.Service.Reducer
     ) where
 
 import Control.Monad
+import Control.Concurrent.STM.Lock
+import Control.Concurrent.STM
 
 import Data.Proxy
 
@@ -51,25 +53,31 @@ handleResolved selector event state = do
 
 reducer :: (MState m v)
     => EventSettings -> v s
+    -- replay ready flag
+    -> Lock
     -> ResolvedHandler IO v s 
     -> IO ()
-reducer EventSettings{..} state handler = do
+reducer EventSettings{..} state serverLock handler = do
     -- replay from the beginning
-    replaySubscription <- subscribeFrom eventConn streamName True Nothing Nothing Nothing
+    subscription <- subscribeFrom eventConn streamName True Nothing Nothing Nothing
 
-    let handleNext subscription = do
-            event <- nextEvent subscription
-            handler event state
+    let nextEvent' = nextEvent subscription
+        handleEvent = flip handler state
+        handleNext = nextEvent' >>= handleEvent
 
+        -- TODO: rewrite in a more functional/lazy manner,
+        --       monitor event replay progress
         replayEvents = do
-            caughtUp <- hasCaughtUp replaySubscription
-            unless caughtUp $ handleNext replaySubscription >> replayEvents
+            caughtUp <- hasCaughtUp subscription
+            unless caughtUp $ handleNext >> replayEvents
+        
+        handleUpstream = void $ forever handleNext
 
-        handlingLoop = void . forever . handleNext
+        unlockServer = atomically $ do
+            isLocked <- locked serverLock
+            when isLocked $ release serverLock
 
     replayEvents
+    unlockServer
 
-    unsubscribe replaySubscription
-    upstreamSubscription <- subscribe eventConn streamName True Nothing
-
-    handlingLoop upstreamSubscription
+    handleUpstream

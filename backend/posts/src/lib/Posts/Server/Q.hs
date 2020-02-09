@@ -34,12 +34,12 @@ postsQServer EventSettings{..} mstate =
         postById :: PostID -> IO (Maybe P.Post)
         postById id' = do
             st <- getSt
-            pure $ find ((==) id' . postId . hashedPost) $ posts st
+            pure $ find ((==) id' . postId . acceptedPost) $ posts st
 
         threadById :: PostID -> IO (Maybe Thread)
         threadById id' = do
             st <- getSt
-            pure $ find ((==) id' . postId . hashedPost . opPost) $ threads st
+            pure $ find ((==) id' . postId . acceptedPost . opPost) $ threads st
 
         recentThreadsByTag ::
                PostTag -> Maybe Int
@@ -49,7 +49,7 @@ postsQServer EventSettings{..} mstate =
             st <- getSt
             let range = fromMaybe recentOpsDefaultRange (mrange >>= extractRange)
                 ths = filter
-                    (elem tag . postTags . postData . hashedPost . opPost) $
+                    (elem tag . postTags . postData . acceptedPost . opPost) $
                     threads st
                 thsPage = applyRange range ths
                 result = case postsAmount of
