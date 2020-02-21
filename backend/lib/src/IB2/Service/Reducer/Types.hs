@@ -6,12 +6,19 @@
 {-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE FunctionalDependencies #-}
+{-# LANGUAGE DeriveGeneric #-}
+{-# LANGUAGE DeriveAnyClass #-}
+{-# LANGUAGE OverloadedStrings #-}
 
 module IB2.Service.Reducer.Types where
 
 import Control.Concurrent.STM
 
+import Data.Aeson
+
 import Database.EventStore
+
+import GHC.Generics
 
 import IB2.Service.Events
 
@@ -40,3 +47,6 @@ type ResolvedHandler m v s = ResolvedEvent -> v s -> m ()
 type HandlerSelector m v s = EventType ->
      ResolvedHandler m v s -> ResolvedHandler m v s
     
+data ReducerStarted = ReducerStarted deriving (Generic, ToJSON, FromJSON)
+instance Event' ReducerStarted where
+    eventType _ = "reducerStarted" 

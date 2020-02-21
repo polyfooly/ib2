@@ -77,6 +77,10 @@ reducer EventSettings{..} state serverLock handler = do
             isLocked <- locked serverLock
             when isLocked $ release serverLock
 
+        evt = create ReducerStarted
+
+    _ <- waitCatch =<< sendEvent eventConn streamName anyVersion evt Nothing
+
     replayEvents
     unlockServer
 
