@@ -21,6 +21,7 @@ import IB2.Frontend.API.Client
 import IB2.Frontend.Types
 import IB2.Frontend.UI.BoardHeader
 import IB2.Frontend.UI.Thread
+import IB2.Frontend.UI.ReplyForm
 import IB2.Frontend.Routes
 
 
@@ -43,7 +44,13 @@ threadView id' = do
 
 threadView' :: MonadWidget t m => Dynamic t Thread -> GoTo t m
 threadView' thread = do
-    reply <- threadEl ThreadFull thread
+    replyEvt <- threadEl ThreadFull thread
+    let op = acceptedPost . opPost <$> thread
+    replyId <- replyFormEl
+        (postId <$> op)
+        (postTags . postData <$> op)
+        replyEvt
+
     pure never
 
 wrongIdFallback :: MonadWidget t m => GoTo t m

@@ -39,8 +39,8 @@ addSubThread thread threads' =
             in md { subthreads = newThreadId : subthreads md }
         }
 
-createNewThread post = Thread
-    { opPost = post
+createNewThread opPost = Thread
+    { opPost = opPost
     , threadPosts = []
     , threadMetadata = ThreadMetadata
         { postCount = 0

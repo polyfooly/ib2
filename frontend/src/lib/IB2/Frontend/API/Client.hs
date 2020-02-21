@@ -43,12 +43,12 @@ apiClient v = client
     (constDyn baseURL)
     where baseURL = BasePath $ "/api/" <> v <> "/"
 
-postPost :<|> (
+postPost' :<|> (
          postById
     :<|> threadById
     :<|> recentThreadsByTag ) = apiClient "v1"
 
-postPost :: (_) => _
+postPost' :: (_) => _
 --postById :: (_) => _
 --recentThreadsByTag :: (_) => _
 --threadById :: (_) => _
@@ -58,7 +58,7 @@ recentThreadsPaginated :: (_)
     -> Dynamic t (Maybe Int)
     -> Event t ()
     -> m (Dynamic t (Maybe Int), Dynamic t [Thread])
-recentThreadsPaginated tag' per' page' amount' evt = do
+recentThreadsPaginated tag' per' page' amount' trigger = do
     let ranges = putRange <$> range
         range = Range Nothing
             <$> per'
@@ -71,7 +71,7 @@ recentThreadsPaginated tag' per' page' amount' evt = do
             (Right <$> tag')
             (maybe QNone QParamSome <$> amount')
             (Right <$> ranges)
-            evt
+            trigger
 
     let threads = maybe [] id <$> fmap resourcePage <$> sucRes
         total = fmap resourceTotalCount <$> sucRes
@@ -82,8 +82,18 @@ getThreadById :: (_)
     => Dynamic t PostID
     -> Event t ()
     -> m (Dynamic t (Maybe Thread))
-getThreadById id' evt = do
-    response <- threadById (Right <$> id') evt
+getThreadById id' trigger = do
+    response <- threadById (Right <$> id') trigger
     sucRes <- holdDyn Nothing $ reqSuccess <$> response
+
+    pure $ join <$> sucRes
+
+postPost :: (_)
+    => Dynamic t PostData
+    -> Event t ()
+    -> m (Event t (Maybe PostID))
+postPost postData trigger = do
+    response <- postPost' (Right <$> postData) trigger
+    let sucRes = reqSuccess <$> response
 
     pure $ join <$> sucRes

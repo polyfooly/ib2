@@ -27,7 +27,7 @@ boardHeaderEl title = do
 
 navBar :: MonadWidget t m => GoTo t m
 navBar = do
-    let boards = constDyn [ "b", "crypt" ]
+    let boards = constDyn [ "b", "d", "a", "crypt" ]
     goTos <- simpleList boards navButton
         
     pure $ switchPromptlyDyn $ leftmost <$> goTos
