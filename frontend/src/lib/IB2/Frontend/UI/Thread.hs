@@ -24,7 +24,7 @@ threadEl mode thread =
         opReply <- postEl $ opPost <$> thread
         
         bodyReplies <- simpleList 
-            (threadPosts <$> thread)
+            (reverse . threadPosts <$> thread)
             postEl
 
         let replies = (opReply :) <$> bodyReplies
