@@ -1,18 +1,16 @@
 -- Copyright 2019 Kyryl Vlasov
 -- SPDX-License-Identifier: Apache-2.0
 
-{-# LANGUAGE DataKinds #-}
-{-# LANGUAGE TypeOperators #-}
 {-# LANGUAGE OverloadedStrings #-}
 
-module FrontendHost where
+module IB2.FrontendHost where
 
 import Servant
 import Network.Wai.Application.Static
 import WaiAppStatic.Types
 import Network.Wai.Handler.Warp (run)
 
-import FrontendHost.API
+import IB2.FrontendHost.API
 
 
 server :: String -> Server FrontendHostAPI
@@ -20,7 +18,7 @@ server dir = serveDirectoryWith serveSettings
     where
         serveSettings = defSettings { ssLookupFile = lookupFile }
         indexPiece = [unsafeToPiece "index.html"]
-        defSettings = (defaultFileServerSettings dir)
+        defSettings = defaultFileServerSettings dir
         lookupFile p = do
             f <- ssLookupFile defSettings p
             let defAction = ssLookupFile defSettings indexPiece

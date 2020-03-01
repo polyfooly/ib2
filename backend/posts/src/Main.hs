@@ -7,7 +7,7 @@ module Main where
 
 import Database.EventStore
 
-import Posts
+import IB2.Posts
 import IB2.Service.Types
 
 main :: IO ()

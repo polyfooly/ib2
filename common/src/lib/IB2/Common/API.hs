@@ -3,7 +3,7 @@
 
 module IB2.Common.API
     ( module IB2.Common.API
-    , module Posts.API
+    , module IB2.Posts.API
     ) where
 
-import Posts.API
+import IB2.Posts.API

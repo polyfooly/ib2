@@ -7,7 +7,7 @@
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE RecordWildCards #-}
 
-module Posts.Server.Q where
+module IB2.Posts.Server.Q where
 
 import Data.List
 import Data.Maybe
@@ -18,9 +18,8 @@ import Servant.Pagination
 import IB2.Service.Types
 import IB2.Service.Events
 
-import Posts.API
-import Posts.Types as P
---import Posts.Utils
+import IB2.Posts.API
+import IB2.Posts.Types as P
 
 
 postsQServer :: MState m v 

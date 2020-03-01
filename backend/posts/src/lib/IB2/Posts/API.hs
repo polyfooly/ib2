@@ -5,13 +5,13 @@
 {-# LANGUAGE TypeOperators #-}
 {-# LANGUAGE TypeApplications #-}
 
-module Posts.API where
+module IB2.Posts.API where
 
 import Servant
 import Servant.Pagination
 
-import Posts.Types hiding (Post)
-import qualified Posts.Types as P
+import IB2.Posts.Types hiding (Post)
+import qualified IB2.Posts.Types as P
 
 import IB2.Service.Server.Types
 

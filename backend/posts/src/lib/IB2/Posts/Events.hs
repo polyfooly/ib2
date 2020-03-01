@@ -5,14 +5,14 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE DeriveAnyClass #-}
 
-module Posts.Events where
+module IB2.Posts.Events where
 
 import Data.Aeson
 import GHC.Generics
 
 import IB2.Service.Events
 
-import Posts.Types
+import IB2.Posts.Types
 
 
 data TestEvent = TestEvent { testVar :: Int }

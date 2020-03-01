@@ -1,15 +1,14 @@
 -- Copyright 2019 Kyryl Vlasov
 -- SPDX-License-Identifier: Apache-2.0
 
-{-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE FlexibleContexts #-}
 
-module Translators.Regular where
+module IB2.Node.Translators.Regular where
 
 import Servant
 import Servant.Client
 
-import IB2.Common.Types()
+import IB2.Common.Types ()
 import IB2.Service.Server
 
 

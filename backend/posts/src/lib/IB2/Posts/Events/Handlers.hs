@@ -7,12 +7,11 @@
 {-# LANGUAGE TypeOperators #-}
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE GADTs #-}
-{-# LANGUAGE KindSignatures #-}
 {-# LANGUAGE PartialTypeSignatures #-}
 {-# LANGUAGE ViewPatterns #-}
 {-# LANGUAGE TypeFamilies #-}
 
-module Posts.Events.Handlers where
+module IB2.Posts.Events.Handlers where
 
 import Data.Proxy
 import Data.Kind
@@ -20,43 +19,41 @@ import Data.Kind
 import IB2.Service.Reducer
 import IB2.Service.Events
 
-import Posts.Events
-import Posts.Types
-import Posts.Utils
+import IB2.Posts.Events
+import IB2.Posts.Types
+import IB2.Posts.Utils
 
 -- TODO: rewrite handleable abstraction with eventType as typeclass param
 -- and corresponding event structure as associate type, handle using Alternative
 instance Handleable PostPosted PostsState where
-    handle event state = do
-        --putStrLn "handling post posted"
-        runSt $ do
-            st' <- readSt state
-            
-            let hashedNewPost = postedPost event
-                parent = parentId $ postData hashedNewPost
+    handle event state = runSt $ do
+        st' <- readSt state
+        
+        let hashedNewPost = postedPost event
+            parent = parentId $ postData hashedNewPost
 
-            if isCorrectParent (posts st') parent
-                then modifySt state $ \st ->
-                    let newLastIndex = postsLastIndex st + 1
-                        posts' = posts st
-                        threads' = threads st
-                        newPost = Post
-                            { acceptedPost = hashedNewPost
-                            , postIndex = newLastIndex }
+        if isCorrectParent (posts st') parent
+            then modifySt state $ \st ->
+                let newLastIndex = postsLastIndex st + 1
+                    posts' = posts st
+                    threads' = threads st
+                    newPost = Post
+                        { acceptedPost = hashedNewPost
+                        , postIndex = newLastIndex }
 
-                        newThreads = case parent of
-                            0 -> createNewThread newPost : threads'
-                            (isThreadReplyId posts' -> True) ->
-                                let newThread = createNewThread newPost
-                                in newThread : 
-                                    addSubThread newThread
-                                    (appendToThread newPost threads')
-                            _ -> appendToThread newPost threads'
-                    in st
-                        { posts = newPost : posts'
-                        , threads = newThreads
-                        , postsLastIndex = newLastIndex }
-                else pure ()
+                    newThreads = case parent of
+                        0 -> createNewThread newPost : threads'
+                        (isThreadReplyId posts' -> True) ->
+                            let newThread = createNewThread newPost
+                            in newThread : 
+                                addSubThread newThread
+                                (appendToThread newPost threads')
+                        _ -> appendToThread newPost threads'
+                in st
+                    { posts = newPost : posts'
+                    , threads = newThreads
+                    , postsLastIndex = newLastIndex }
+            else pure ()
 
 instance Handleable PostDeleted PostsState where
     handle event state =

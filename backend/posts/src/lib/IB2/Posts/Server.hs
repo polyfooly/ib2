@@ -4,9 +4,8 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE TypeOperators #-}
 {-# LANGUAGE TypeApplications #-}
---{-# LANGUAGE PartialTypeSignatures #-}
 
-module Posts.Server where
+module IB2.Posts.Server where
 
 import Control.Concurrent.STM
 
@@ -14,10 +13,10 @@ import Database.EventStore
 
 import Servant
 
-import Posts.Types
-import Posts.API
-import Posts.Server.Q
-import Posts.Server.C
+import IB2.Posts.Types
+import IB2.Posts.API
+import IB2.Posts.Server.Q
+import IB2.Posts.Server.C
 
 import IB2.Service.Types
 import IB2.Service.Server

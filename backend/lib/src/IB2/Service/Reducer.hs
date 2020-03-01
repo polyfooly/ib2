@@ -25,9 +25,9 @@ import IB2.Service.Events
 maybeHandle :: forall e s m v. (Handleable e s, MState m v) 
     => Proxy e -> ResolvedHandler IO v s
 maybeHandle _ event state = do --try to handle as specific event
-    let parsed = (parse event) :: Maybe e
+    let parsed = parse event :: Maybe e
     case parsed of
-        Nothing -> return ()
+        Nothing -> pure ()
         Just e -> handle e state
         
 tryAs :: (Handleable e s, MState m v)
@@ -38,17 +38,17 @@ tryAs hint t def = --try to handle as handleable or compute default
     else def
 
 emptyHandler :: (MState m v) => ResolvedHandler IO v s
-emptyHandler _ _ = return () 
+emptyHandler _ _ = pure () 
 
 handleResolved :: (MState m v)
     => HandlerSelector IO v s
     -> ResolvedHandler IO v s
-handleResolved selector event state = do
+handleResolved selector event state =
     case UserDefined . recordedEventType <$> resolvedEventRecord event of
-        Nothing -> return ()
+        Nothing -> pure ()
         Just t ->
             -- select one of selector handlers or do nothing
-            (selector t emptyHandler) event state
+            selector t emptyHandler event state
 
 
 reducer :: (MState m v)

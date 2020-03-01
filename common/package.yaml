@@ -30,8 +30,8 @@ library:
   other-modules:
     #- IB2.Service.Server
     - IB2.Service.Server.Types
-    - Posts.Types
-    - Posts.API
+    - IB2.Posts.Types
+    - IB2.Posts.API
   exposed-modules:
     - IB2.Common.API
     - IB2.Common.Types

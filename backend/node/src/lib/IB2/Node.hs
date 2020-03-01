@@ -4,17 +4,17 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE TypeOperators #-}
 
-module Node where
+module IB2.Node where
 
 import Servant
 import Network.Wai.Handler.Warp (run)
 import Network.HTTP.Client (Manager, newManager, defaultManagerSettings)
 
-import Translators (translators)
+import IB2.Node.Translators (translators)
 
-import Node.API
-import Node.Types
-import Node.Service
+import IB2.Node.API
+import IB2.Node.Types
+import IB2.Node.Service
 
 
 server :: NodeConfig -> Manager -> Server NodeAPI

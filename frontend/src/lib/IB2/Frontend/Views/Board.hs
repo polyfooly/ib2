@@ -56,7 +56,7 @@ boardView' threads' total per = do
     replyEvts <- simpleList threads' $ threadEl ThreadPreview
 
     let threadReplies = switchPromptlyDyn $ leftmost <$> replyEvts
-        goTo = (threadRoute . showTextData) <$> threadReplies
+        goTo = threadRoute . showTextData <$> threadReplies
 
     pure (goTo, page)
 

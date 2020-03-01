@@ -5,15 +5,15 @@
 {-# LANGUAGE TypeOperators #-}
 {-# LANGUAGE TypeApplications #-}
 
-module Node.API
-    ( module Node.API
-    , module Posts.API
+module IB2.Node.API
+    ( module IB2.Node.API
+    , module IB2.Posts.API
     ) where
 
 import Servant
 
-import FrontendHost.API
-import Posts.API
+import IB2.FrontendHost.API
+import IB2.Posts.API
 import IB2.Service.Events.Types
 
 

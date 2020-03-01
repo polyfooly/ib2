@@ -1,11 +1,10 @@
 -- Copyright 2019 Kyryl Vlasov
 -- SPDX-License-Identifier: Apache-2.0
 
-{-# LANGUAGE DataKinds #-}
 {-# LANGUAGE TypeOperators #-}
 {-# LANGUAGE TypeApplications #-}
 
-module FrontendHost.API where
+module IB2.FrontendHost.API where
 
 import Servant
 

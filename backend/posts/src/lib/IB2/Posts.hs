@@ -3,11 +3,10 @@
 
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE TypeOperators #-}
-{-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE RecordWildCards #-}
 {-# LANGUAGE OverloadedStrings #-}
 
-module Posts where
+module IB2.Posts where
 
 import Data.Time
 
@@ -24,10 +23,10 @@ import IB2.Service
 import IB2.Service.Types
 import IB2.Service.Events
 
-import Posts.API
-import Posts.Server
-import Posts.Events.Handlers
-import Posts.Types as P
+import IB2.Posts.API
+import IB2.Posts.Server
+import IB2.Posts.Events.Handlers
+import IB2.Posts.Types as P
 
 
 app :: EventSettings -> TVar PostsState -> Application
@@ -53,11 +52,11 @@ defaultState = PostsState
 postsService :: ServiceSettings -> IO ()
 postsService ServiceSettings{..} = do
     let connSettings = defaultSettings
-            { s_defaultUserCredentials = Just $ eventCreds }
+            { s_defaultUserCredentials = Just eventCreds }
 
-    conn <- connect connSettings (Static "127.0.0.1" $ eventPort)
+    conn <- connect connSettings $ Static "127.0.0.1" eventPort
     mstate <- initStIO defaultState
-    serverLock <- atomically $ Lock.newAcquired
+    serverLock <- atomically Lock.newAcquired
 
     let eventSettings = EventSettings
             { streamName = "posts"

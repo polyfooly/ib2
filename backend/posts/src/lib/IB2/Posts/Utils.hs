@@ -1,12 +1,12 @@
 -- Copyright 2019 Kyryl Vlasov
 -- SPDX-License-Identifier: Apache-2.0
 
-module Posts.Utils where
+module IB2.Posts.Utils where
 
 import Data.List
 import Data.List.Index
 
-import Posts.Types
+import IB2.Posts.Types
 
 
 isCorrectParent _ 0 = True
@@ -33,7 +33,7 @@ appendToThread post threads' =
 addSubThread thread threads' =
     let newThreadOp = opPost thread
         newThreadId = postId $ acceptedPost newThreadOp
-    in modifyThread (parentId $ postData $ acceptedPost $ newThreadOp) threads' $ \th -> th
+    in modifyThread (parentId $ postData $ acceptedPost newThreadOp) threads' $ \th -> th
         { threadMetadata =
             let md = threadMetadata th
             in md { subthreads = newThreadId : subthreads md }

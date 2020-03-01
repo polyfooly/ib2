@@ -4,9 +4,8 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE TypeOperators #-}
 {-# LANGUAGE RecordWildCards #-}
-{-# LANGUAGE ViewPatterns #-}
 
-module Posts.Server.C where
+module IB2.Posts.Server.C where
 
 import Data.Time
 import Data.Hashable
@@ -20,10 +19,10 @@ import IB2.Service.Server
 import IB2.Service.Types
 import IB2.Service.Events
 
-import Posts.API
-import Posts.Types
-import Posts.Events
-import Posts.Utils
+import IB2.Posts.API
+import IB2.Posts.Types
+import IB2.Posts.Events
+import IB2.Posts.Utils
 
 
 postsCServer :: (MState m v)

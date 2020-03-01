@@ -3,8 +3,8 @@
 
 module Main where
 
-import Node
-import Node.Types
+import IB2.Node
+import IB2.Node.Types
 
 import IB2.Service.Events
 

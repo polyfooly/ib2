@@ -12,7 +12,7 @@
 
 module IB2.Common.Types
     ( module IB2.Common.Types 
-    , module Posts.Types
+    , module IB2.Posts.Types
     , Paginated(..)
     ) where
 
@@ -25,7 +25,7 @@ import Servant.Pagination
  
 import IB2.Service.Server.Types
 
-import Posts.Types
+import IB2.Posts.Types
 
 
 -- support for automatic client function derivation

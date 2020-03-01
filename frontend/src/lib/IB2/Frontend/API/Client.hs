@@ -18,7 +18,6 @@ import Control.Lens
 
 import Safe
 
---import Servant.API.ResponseHeaders
 import Data.Proxy
 import Data.Text (Text)
 import Data.Either.Combinators
@@ -29,7 +28,7 @@ import Servant.API hiding (Post)
 import Servant.Reflex
 import Servant.Pagination
 
-import Reflex.Dom hiding (Client, HNil, HCons)
+import Reflex.Dom hiding (Client)
     
 import IB2.Common.API
 import IB2.Common.Types
@@ -73,7 +72,7 @@ recentThreadsPaginated tag' per' page' amount' trigger = do
             (Right <$> ranges)
             trigger
 
-    let threads = maybe [] id <$> fmap resourcePage <$> sucRes
+    let threads = maybe [] resourcePage <$> sucRes
         total = fmap resourceTotalCount <$> sucRes
 
     pure (total, threads)

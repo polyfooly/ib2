@@ -4,7 +4,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TypeOperators #-}
 
-module Translators 
+module IB2.Node.Translators 
     ( translators
     ) where
 
@@ -12,11 +12,11 @@ import Servant
 import Servant.Client
 import Network.HTTP.Client (Manager)
 
-import Node.Types
-import Node.API
+import IB2.Node.Types
+import IB2.Node.API
 
-import Translators.Raw (rawTranslator)
-import Translators.Regular (regularTranslator)
+import IB2.Node.Translators.Raw (rawTranslator)
+import IB2.Node.Translators.Regular (regularTranslator)
 
 
 postsTranslator = regularTranslator postsAPI

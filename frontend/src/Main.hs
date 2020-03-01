@@ -27,10 +27,10 @@ headElement = do
                 [ ("rel", "stylesheet")
                 , ("type", "text/css")
                 , ("href", file) 
-                ]) $ blank
+                ]) blank
 
         viewportMeta =
             elAttr "meta" (Map.fromList
                 [ ("name", "viewport")
                 , ("content", "width=device-width, initial-scale=1")
-                ]) $ blank
+                ]) blank

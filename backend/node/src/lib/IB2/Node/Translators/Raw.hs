@@ -7,7 +7,7 @@
 {-# LANGUAGE RankNTypes #-}
 {-# LANGUAGE OverloadedStrings #-}
 
-module Translators.Raw (rawTranslator) where
+module IB2.Node.Translators.Raw (rawTranslator) where
 
 import Servant
 

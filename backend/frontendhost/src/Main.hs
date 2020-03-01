@@ -4,7 +4,7 @@
 import System.Environment
 import Control.Lens
 
-import FrontendHost (hostFrontend)
+import IB2.FrontendHost (hostFrontend)
 
 --frontendDir = "dist-ghcjs/build/x86_64-linux/ghcjs-8.4.0.1/frontend-0.1.0.0/x/webapp/build/webapp/webapp.jsexe"
 

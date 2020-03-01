@@ -16,7 +16,7 @@ import IB2.Common.Types
 postEl :: MonadWidget t m => Dynamic t Post -> m (Event t PostIndex)
 postEl post = do
     clk <- el "div" $ do
-        clk <- el "div" $ do -- title
+        clk <- el "div" $ do
             el "span" $
                 display $ postDate . acceptedPost <$> post
             el "span" $
@@ -24,7 +24,7 @@ postEl post = do
             
             button "Reply"
 
-        el "div" $ do -- body
+        el "div" $ do
             el "div" $
                 dynText $ postText . postData . acceptedPost <$> post
 

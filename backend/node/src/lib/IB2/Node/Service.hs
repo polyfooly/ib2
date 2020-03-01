@@ -1,16 +1,16 @@
 -- Copyright 2019 Kyryl Vlasov
 -- SPDX-License-Identifier: Apache-2.0
 
-module Node.Service where
+module IB2.Node.Service where
 
 import Servant.Server
 
-import Node.API
-import Node.Types
+import IB2.Node.API
+import IB2.Node.Types
 
 
 nodeService :: NodeConfig -> Server NodeServiceAPI
 nodeService config =
     getEventsConfig
-        where getEventsConfig = do
-                return $ eventsConfig config
+        where getEventsConfig =
+                pure $ eventsConfig config
